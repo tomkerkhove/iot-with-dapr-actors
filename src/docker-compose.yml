@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  tomkerkhove.dapr.actors.runtime:
+    image: ${DOCKER_REGISTRY-}tomkerkhovedapractorsruntime
+    build:
+      context: .
+      dockerfile: TomKerkhove.Dapr.Actors.Runtime/Dockerfile
+
+  tomkerkhove.dapr.apis.management:
+    image: ${DOCKER_REGISTRY-}tomkerkhovedaprapismanagement
+    build:
+      context: .
+      dockerfile: TomKerkhove.Dapr.APIs.Management/Dockerfile
+
