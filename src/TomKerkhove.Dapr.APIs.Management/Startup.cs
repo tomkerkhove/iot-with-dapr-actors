@@ -44,7 +44,8 @@ namespace TomKerkhove.Dapr.APIs.Management
 
                 RestrictToJsonContentType(options);
                 AddEnumAsStringRepresentation(options);
-            });
+            })
+            .AddNewtonsoftJson();
 
             services.AddDependencies();
             services.AddHealthChecks();

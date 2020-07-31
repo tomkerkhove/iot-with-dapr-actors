@@ -8,16 +8,22 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
 {
     public class DeviceRepository
     {
-        public async Task<DeviceInfo> GetData(string deviceId)
+        public async Task<DeviceInfo> GetDataAsync(string deviceId)
         {
             var proxy = CreateActorProxy(deviceId);
             return await proxy.GetInfoAsync();
         }
 
-        public async Task SetData(string deviceId, DeviceInfo newData)
+        public async Task SetDataAsync(string deviceId, DeviceInfo newData)
         {
             var proxy = CreateActorProxy(deviceId);
             await proxy.SetInfoAsync(newData);
+        }
+
+        public async Task SendMessageAsync(string deviceId, MessageTypes messageType, string payload)
+        {
+            var proxy = CreateActorProxy(deviceId);
+            await proxy.SendMessageAsync(messageType, payload);
         }
 
         private IDeviceActor CreateActorProxy(string deviceId)

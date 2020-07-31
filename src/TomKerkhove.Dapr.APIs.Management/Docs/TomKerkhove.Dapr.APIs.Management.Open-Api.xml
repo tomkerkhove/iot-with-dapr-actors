@@ -19,7 +19,30 @@
             </summary>
             <remarks>Provides capability to update information for a given device.</remarks>
             <param name="deviceId">Unique id for a given device</param>
+            <param name="newData">New information about the device</param>
             <response code="200">Device information is provided</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SendMessage(System.String,TomKerkhove.Dapr.Actors.Device.Interface.Contracts.MessageTypes,System.String)">
+            <summary>
+                Send Message
+            </summary>
+            <remarks>Provides capability to update information for a given device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <param name="messageType">Type of message sent to send to device</param>
+            <param name="payload">Payload to send to device</param>
+            <response code="202">Message sent to device</response>
+            <response code="400">Message sent to device</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DiscoveryController.GetDevice(System.String)">
+            <summary>
+                Discover Device
+            </summary>
+            <remarks>Provides ID of the device for a given IMEI.</remarks>
+            <param name="imei">IMEI of the device</param>
+            <response code="200">Device information is provided</response>
+            <response code="404">Device was not discovered</response>
             <response code="503">We are undergoing some issues</response>
         </member>
         <member name="T:TomKerkhove.Dapr.APIs.Management.Controllers.HealthController">
@@ -40,6 +63,17 @@
             <remarks>Provides an indication about the health of the API.</remarks>
             <response code="200">API is healthy</response>
             <response code="503">API is unhealthy or in degraded state</response>
+        </member>
+        <member name="P:TomKerkhove.Dapr.APIs.Management.Exceptions.UnknownDeviceException.Imei">
+            <summary>
+            Imei of the device
+            </summary>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Exceptions.UnknownDeviceException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="imei">Imei of the device</param>
         </member>
         <member name="M:TomKerkhove.Dapr.APIs.Management.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
