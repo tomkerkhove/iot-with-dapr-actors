@@ -26,6 +26,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         public async Task ProvisionAsync(DeviceInfo info)
         {
             await SetInfoAsync(info);
+            // TODO: Emit event
         }
 
         /// <summary>
