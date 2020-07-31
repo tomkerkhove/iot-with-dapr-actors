@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.Actors.Device.Interface;
+using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.APIs.Management.Repositories;
 
 namespace TomKerkhove.Dapr.APIs.Management.Controllers
@@ -19,15 +20,15 @@ namespace TomKerkhove.Dapr.APIs.Management.Controllers
             _deviceRepository = deviceRepository;
         }
 
-        [HttpGet("{deviceId}/data")]
+        [HttpGet("{deviceId}/info")]
         public async Task<IActionResult> Get([FromRoute] string deviceId)
         {
             var data = await _deviceRepository.GetData(deviceId);
             return Ok(data);
         }
 
-        [HttpPut("{deviceId}/data")]
-        public async Task<IActionResult> Get([FromRoute] string deviceId, [FromBody]DeviceState newData)
+        [HttpPut("{deviceId}/info")]
+        public async Task<IActionResult> Get([FromRoute] string deviceId, [FromBody] DeviceInfo newData)
         {
             await _deviceRepository.SetData(deviceId, newData);
             return Ok();

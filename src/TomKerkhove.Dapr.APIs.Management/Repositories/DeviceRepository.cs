@@ -2,18 +2,19 @@
 using Dapr.Actors;
 using Dapr.Actors.Client;
 using TomKerkhove.Dapr.Actors.Device.Interface;
+using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 
 namespace TomKerkhove.Dapr.APIs.Management.Repositories
 {
     public class DeviceRepository
     {
-        public async Task<DeviceState> GetData(string deviceId)
+        public async Task<DeviceInfo> GetData(string deviceId)
         {
             var proxy = CreateActorProxy(deviceId);
             return await proxy.GetInfoAsync();
         }
 
-        public async Task SetData(string deviceId, DeviceState newData)
+        public async Task SetData(string deviceId, DeviceInfo newData)
         {
             var proxy = CreateActorProxy(deviceId);
             await proxy.SetInfoAsync(newData);
