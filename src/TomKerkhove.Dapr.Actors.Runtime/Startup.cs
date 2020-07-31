@@ -1,8 +1,13 @@
+using System;
+using Arcus.Security.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Configuration;
+using Serilog.Events;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing;
 
 namespace TomKerkhove.Dapr.Actors.Runtime
@@ -39,6 +44,23 @@ namespace TomKerkhove.Dapr.Actors.Runtime
             {
                 app.UseHsts();
             }
+
+            Log.Logger = CreateLoggerConfiguration(app.ApplicationServices).CreateLogger();
+        }
+
+        private LoggerConfiguration CreateLoggerConfiguration(IServiceProvider serviceProvider)
+        {
+            var secretProvider = serviceProvider.GetService<ISecretProvider>();
+            var telemetryKey = secretProvider.GetRawSecretAsync("APPLICATION_INSIGHTS").Result;
+
+            return new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .Enrich.WithVersion()
+                .Enrich.WithComponentName("Actor Runtime")
+                .WriteTo.Console()
+                .WriteTo.AzureApplicationInsights(telemetryKey);
         }
     }
 }
