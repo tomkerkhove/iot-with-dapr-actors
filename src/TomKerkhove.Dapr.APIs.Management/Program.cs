@@ -58,6 +58,10 @@ namespace TomKerkhove.Dapr.APIs.Management
             IHostBuilder webHostBuilder =
                 Host.CreateDefaultBuilder(args)
                     .ConfigureAppConfiguration(configBuilder => configBuilder.AddConfiguration(configuration))
+                    .ConfigureSecretStore((config, secretStoreBuilder) =>
+                    {
+                        secretStoreBuilder.AddEnvironmentVariables();
+                    })
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.ConfigureKestrel(kestrelServerOptions => kestrelServerOptions.AddServerHeader = false)

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Arcus.Security.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,8 @@ namespace TomKerkhove.Dapr.APIs.Management
 
                 RestrictToJsonContentType(options);
                 AddEnumAsStringRepresentation(options);
-            });
+            })
+            .AddNewtonsoftJson();
 
             services.AddDependencies();
             services.AddHealthChecks();
@@ -67,7 +69,10 @@ namespace TomKerkhove.Dapr.APIs.Management
         }
 
         private LoggerConfiguration CreateLoggerConfiguration(IServiceProvider serviceProvider)
-        {            
+        {
+            var secretProvider = serviceProvider.GetService<ISecretProvider>();
+            var telemetryKey = secretProvider.GetRawSecretAsync("APPLICATION_INSIGHTS").Result;
+
             return new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -75,7 +80,8 @@ namespace TomKerkhove.Dapr.APIs.Management
                 .Enrich.WithVersion()
                 .Enrich.WithComponentName("Device API")
                 .Enrich.WithHttpCorrelationInfo(serviceProvider)
-                .WriteTo.Console();
+                .WriteTo.Console()
+                .WriteTo.AzureApplicationInsights(telemetryKey);
         }
 
         private static void RestrictToJsonContentType(MvcOptions options)
