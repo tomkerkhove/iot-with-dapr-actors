@@ -2,6 +2,8 @@
 
 Sandbox to play with Dapr Actors.
 
+<div style="text-align: center"><img src="https://github.com/dapr/dapr/raw/master/img/dapr_logo.svg" height="120px">
+
 ## How does it work?
 
 You'll find out soon!
