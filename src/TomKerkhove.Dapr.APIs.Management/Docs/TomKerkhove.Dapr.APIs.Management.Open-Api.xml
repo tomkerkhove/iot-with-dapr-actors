@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TomKerkhove.Dapr.APIs.Management</name>
+    </assembly>
+    <members>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.GetInfo(System.String)">
+            <summary>
+                Get Device Info
+            </summary>
+            <remarks>Provides capability to get latest information for a given device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <response code="200">Device information is provided</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SetInfo(System.String,TomKerkhove.Dapr.Actors.Device.Interface.Contracts.DeviceInfo)">
+            <summary>
+                Set Device Info
+            </summary>
+            <remarks>Provides capability to update information for a given device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <response code="200">Device information is provided</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
+        <member name="T:TomKerkhove.Dapr.APIs.Management.Controllers.HealthController">
+            <summary>
+            API endpoint to check the health of the application.
+            </summary>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.HealthController.#ctor(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TomKerkhove.Dapr.APIs.Management.Controllers.HealthController"/> class.
+            </summary>
+            <param name="healthCheckService">The service to provide the health of the API application.</param>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.HealthController.Get">
+            <summary>
+                Get Health
+            </summary>
+            <remarks>Provides an indication about the health of the API.</remarks>
+            <response code="200">API is healthy</response>
+            <response code="503">API is unhealthy or in degraded state</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TomKerkhove.Dapr.APIs.Management.Startup"/> class.
+            </summary>
+        </member>
+        <member name="P:TomKerkhove.Dapr.APIs.Management.Startup.Configuration">
+            <summary>
+            Gets the configuration of key/value application properties.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.AddOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds OpenAPI UI
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Adds dependencies
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddOpenApiSpecs(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Adds OpenAPI specs
+            </summary>
+        </member>
+    </members>
+</doc>

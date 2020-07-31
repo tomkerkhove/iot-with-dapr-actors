@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Dapr.Actors;
-using Dapr.Actors.Runtime;
 using Microsoft.Azure.Devices.Shared;
 using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 
