@@ -1,19 +1,49 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>3dda73ca-91f8-4ad9-926f-f2cc4bb12f87</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>docs/TomKerkhove.Dapr.APIs.Management.Open-Api.xml</DocumentationFile>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <None Remove="Docs\TomKerkhove.Dapr.APIs.Management.Open-Api.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Docs\TomKerkhove.Dapr.APIs.Management.Open-Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Arcus.Security.Core" Version="1.2.0" />
+    <PackageReference Include="Arcus.Security.Providers.AzureKeyVault" Version="1.2.0" />
+    <PackageReference Include="Arcus.WebApi.Logging" Version="1.0.1" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="0.2.1" />
+    <PackageReference Include="Guard.NET" Version="1.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TomKerkhove.Dapr.Actors.Device.Interface\TomKerkhove.Dapr.Actors.Device.Interface.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Docs\TomKerkhove.Dapr.APIs.Management.Open-Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
 
 </Project>

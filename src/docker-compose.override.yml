@@ -13,7 +13,7 @@ services:
   tomkerkhove.dapr.apis.management:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - HTTP_PORT=80
     ports:
       - "880:80"
     volumes:

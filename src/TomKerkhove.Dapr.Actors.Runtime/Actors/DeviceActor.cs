@@ -2,13 +2,16 @@
 using System.Threading.Tasks;
 using Dapr.Actors;
 using Dapr.Actors.Runtime;
+using Microsoft.Azure.Devices.Shared;
 using TomKerkhove.Dapr.Actors.Device.Interface;
+using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 {
     internal class DeviceActor : Actor, IDeviceActor
     {
-        private const string DeviceStateKey = "device_state";
+        private const string DeviceInfoKey = "device_info";
+        private const string TwinStateKey = "twin_state";
 
         /// <summary>
         ///     Initializes a new instance of DeviceActor
@@ -20,34 +23,56 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         {
         }
 
+        public async Task ProvisionAsync(DeviceInfo info)
+        {
+            await SetInfoAsync(info);
+            // TODO: Emit event
+        }
+
         /// <summary>
-        ///     Set DeviceState into actor's private state store
+        ///     Set DeviceInfo into actor's private state store
         /// </summary>
-        /// <param name="data">the user-defined DeviceState which will be stored into state store as DeviceStateKey state</param>
-        public async Task SetInfoAsync(DeviceState data)
+        /// <param name="data">the user-defined DeviceInfo which will be stored into state store as DeviceInfoKey state</param>
+        public async Task SetInfoAsync(DeviceInfo data)
         {
             // Data is saved to configured state store implicitly after each method execution by Actor's runtime.
             // Data can also be saved explicitly by calling this.StateManager.SaveStateAsync();
             // State to be saved must be DataContract serializable.
-            await StateManager.SetStateAsync(
-                DeviceStateKey, // state name
-                data); // data saved for the named state DeviceStateKey
+            await StateManager.SetStateAsync(DeviceInfoKey, data);
         }
 
         /// <summary>
-        ///     Get DeviceState from actor's private state store
+        ///     Set DeviceInfo into actor's private state store
         /// </summary>
-        /// <return>the user-defined DeviceState which is stored into state store as DeviceStateKey state</return>
-        public async Task<DeviceState> GetInfoAsync()
+        /// <param name="data">the user-defined DeviceInfo which will be stored into state store as DeviceInfoKey state</param>
+        public async Task SetTwinAsync(Twin twinInfo)
+        {
+            // Data is saved to configured state store implicitly after each method execution by Actor's runtime.
+            // Data can also be saved explicitly by calling this.StateManager.SaveStateAsync();
+            // State to be saved must be DataContract serializable.
+            await StateManager.SetStateAsync(TwinStateKey, twinInfo);
+        }
+
+        /// <summary>
+        ///     Get DeviceInfo from actor's private state store
+        /// </summary>
+        /// <return>the user-defined DeviceInfo which is stored into state store as DeviceInfoKey state</return>
+        public async Task<DeviceInfo> GetInfoAsync()
         {
             // Gets state from the state store.
-            var potentialData = await StateManager.TryGetStateAsync<DeviceState>(DeviceStateKey);
+            var potentialData = await StateManager.TryGetStateAsync<DeviceInfo>(DeviceInfoKey);
             return potentialData.HasValue ? potentialData.Value : null;
         }
 
-        public Task ReceiveMessageAsync(string rawMessage)
+        public Task ProcessMessageAsync(string rawMessage)
         {
             // TODO: Register timer to detect idle device 
+            return Task.CompletedTask;
+        }
+
+        public Task SetReportedPropertyAsync(TwinCollection reportedProperties)
+        {
+            // TODO: Integrate with IoT Hub
             return Task.CompletedTask;
         }
 

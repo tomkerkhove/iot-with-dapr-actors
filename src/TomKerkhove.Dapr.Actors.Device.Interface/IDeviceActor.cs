@@ -1,27 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Dapr.Actors;
-using Dapr.Actors.Runtime;
+using Microsoft.Azure.Devices.Shared;
+using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Device.Interface
 {
     public interface IDeviceActor : IActor
     {
-        Task SetInfoAsync(DeviceState data);
-        Task<DeviceState> GetInfoAsync();
-        Task ReceiveMessageAsync(string rawMessage);
-    }
-
-    public class DeviceState
-    {
-        public string PropertyA { get; set; }
-        public string PropertyB { get; set; }
-
-        public override string ToString()
-        {
-            var propAValue = this.PropertyA == null ? "null" : this.PropertyA;
-            var propBValue = this.PropertyB == null ? "null" : this.PropertyB;
-            return $"PropertyA: {propAValue}, PropertyB: {propBValue}";
-        }
+        Task ProvisionAsync(DeviceInfo info);
+        Task SetInfoAsync(DeviceInfo info);
+        Task<DeviceInfo> GetInfoAsync();
+        Task ProcessMessageAsync(string rawMessage);
+        Task SetTwinAsync(Twin twinInfo);
+        Task SetReportedPropertyAsync(TwinCollection reportedProperties);
     }
 }
