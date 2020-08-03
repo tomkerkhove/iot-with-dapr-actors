@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dapr.Actors;
-using Microsoft.Azure.Devices.Shared;
 using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Device.Interface
@@ -10,8 +10,7 @@ namespace TomKerkhove.Dapr.Actors.Device.Interface
         Task ProvisionAsync(DeviceInfo info);
         Task SetInfoAsync(DeviceInfo info);
         Task<DeviceInfo> GetInfoAsync();
-        Task SendMessageAsync(MessageTypes type, string rawMessage);
-        Task SetTwinAsync(Twin twinInfo);
-        Task SetReportedPropertyAsync(TwinCollection reportedProperties);
+        Task ReceiveMessageAsync(MessageTypes type, string rawMessage);
+        Task SetReportedPropertyAsync(Dictionary<string, string> reportedProperties);
     }
 }

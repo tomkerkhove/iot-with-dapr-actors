@@ -1,6 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dapr.Actors;
 using Dapr.Actors.Client;
+using GuardNet;
+using Microsoft.Extensions.Logging;
+using Serilog.Core;
 using TomKerkhove.Dapr.Actors.Device.Interface;
 using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 
@@ -8,6 +13,15 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
 {
     public class DeviceRepository
     {
+        private readonly ILogger<DeviceRepository> _logger;
+
+        public DeviceRepository(ILogger<DeviceRepository> logger)
+        {
+            Guard.NotNull(logger,nameof(logger));
+
+            _logger = logger;
+        }
+
         public async Task<DeviceInfo> GetDataAsync(string deviceId)
         {
             var proxy = CreateActorProxy(deviceId);
@@ -20,20 +34,34 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
             await proxy.SetInfoAsync(newData);
         }
 
-        public async Task SendMessageAsync(string deviceId, MessageTypes messageType, string payload)
+        public async Task ReceiveMessageAsync(string deviceId, MessageTypes messageType, string payload)
         {
             var proxy = CreateActorProxy(deviceId);
-            await proxy.SendMessageAsync(messageType, payload);
+            await proxy.ReceiveMessageAsync(messageType, payload);
         }
 
         private IDeviceActor CreateActorProxy(string deviceId)
         {
-            var actorId = new ActorId(deviceId);
+            try
+            {
+                var actorId = new ActorId(deviceId);
 
-            // Create the local proxy by using the same interface that the service implements
-            // By using this proxy, you can call strongly typed methods on the interface using Remoting.
-            var proxy = ActorProxy.Create<IDeviceActor>(actorId, "DeviceActor");
-            return proxy;
+                // Create the local proxy by using the same interface that the service implements
+                // By using this proxy, you can call strongly typed methods on the interface using Remoting.
+                var proxy = ActorProxy.Create<IDeviceActor>(actorId, "DeviceActor");
+                return proxy;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to create Actor proxy");
+                throw;
+            }
+        }
+
+        public async Task ReportPropertiesAsync(string deviceId, Dictionary<string, string> twin)
+        {
+            var proxy = CreateActorProxy(deviceId);
+            await proxy.SetReportedPropertyAsync(twin);
         }
     }
 }

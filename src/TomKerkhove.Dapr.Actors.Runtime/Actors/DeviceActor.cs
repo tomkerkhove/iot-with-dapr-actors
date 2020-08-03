@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arcus.Security.Core;
 using Dapr.Actors;
 using Dapr.Actors.Runtime;
-using Microsoft.Azure.Devices.Shared;
+using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.Actors.Device.Interface;
 using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing;
+using TomKerkhove.Dapr.Actors.Runtime.Extensions;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 {
@@ -18,6 +20,8 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         private const string TwinStateKey = "twin_state";
 
         public string DeviceId => Id.GetId();
+
+        private DeviceClient _deviceClient;
 
         /// <summary>
         ///     Initializes a new instance of DeviceActor
@@ -53,26 +57,21 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             await StateManager.SetStateAsync(DeviceInfoKey, data);
         }
 
-        public async Task SetTwinAsync(Twin twinInfo)
-        {
-            await StateManager.SetStateAsync(TwinStateKey, twinInfo);
-        }
-
         public async Task<DeviceInfo> GetInfoAsync()
         {
             var potentialData = await StateManager.TryGetStateAsync<DeviceInfo>(DeviceInfoKey);
             return potentialData.HasValue ? potentialData.Value : null;
         }
 
-        public async Task SendMessageAsync(MessageTypes type, string rawMessage)
+        public async Task ReceiveMessageAsync(MessageTypes type, string rawMessage)
         {
+            var contextualInformation = ComposeRequiredContextualInformation();
+            Logger.LogMetric("Device Message Received", 1, contextualInformation);
+
             await SetReminderToDetectDeviceGoingOfflineAsync();
 
             var messageProcessor = Services.GetService<MessageProcessor>();
             await messageProcessor.ProcessAsync(type, rawMessage);
-
-            var contextualInformation = ComposeRequiredContextualInformation();
-            Logger.LogMetric("Device Received", 1, contextualInformation);
         }
 
         private async Task SetReminderToDetectDeviceGoingOfflineAsync()
@@ -81,20 +80,45 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             await RegisterReminderAsync(ReminderTypes.LastMessageRecieved.ToString(), state: null, dueTime: TimeSpan.FromMinutes(1), TimeSpan.FromMilliseconds(-1));
         }
 
-        public Task SetReportedPropertyAsync(TwinCollection reportedProperties)
+        public async Task SetReportedPropertyAsync(Dictionary<string,string> reportedProperties)
         {
-            // TODO: Integrate with IoT Hub
-            return Task.CompletedTask;
+            try
+            {
+                var twinInformation = reportedProperties.ConvertToTwinCollection();
+                await _deviceClient.UpdateReportedPropertiesAsync(twinInformation);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "Unable to set reported properties ({ReportedProperties})", reportedProperties);
+            }
         }
 
         /// <summary>
         ///     This method is called whenever an actor is activated.
         ///     An actor is activated the first time any of its methods are invoked.
         /// </summary>
-        protected override Task OnActivateAsync()
+        protected override async Task OnActivateAsync()
         {
             Logger.LogInformation("Activating device {DeviceId}", DeviceId);
-            return Task.CompletedTask;
+
+            try
+            {
+                _deviceClient = await CreateIoTHubDeviceClient();
+
+                Logger.LogInformation("Device {DeviceId} activated", DeviceId);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "Unable to active device {DeviceId}", DeviceId);
+            }
+        }
+
+        private async Task<DeviceClient> CreateIoTHubDeviceClient()
+        {
+            var secretProvider = Services.GetRequiredService<ISecretProvider>();
+            var connectionString = await secretProvider.GetRawSecretAsync($"IOTHUB_CONNECTIONSTRING_DEVICE_{DeviceId}");
+
+            return DeviceClient.CreateFromConnectionString(connectionString, TransportType.Amqp);
         }
 
         /// <summary>
@@ -103,6 +127,16 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         protected override Task OnDeactivateAsync()
         {
             Logger.LogInformation("Deactivating device {DeviceId}", DeviceId);
+
+            try
+            {
+                _deviceClient.Dispose();
+            }
+            finally
+            {
+                Logger.LogInformation("Device {DeviceId} deactivated.", DeviceId);
+            }
+
             return Task.CompletedTask;
         }
 
