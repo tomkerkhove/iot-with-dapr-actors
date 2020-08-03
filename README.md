@@ -6,7 +6,7 @@ Sandbox to play with Dapr Actors.
 
 ## How does it work?
 
-You'll find out soon!
+![POC](./media/POC.png)
 
 ## Try it yourself!
 
