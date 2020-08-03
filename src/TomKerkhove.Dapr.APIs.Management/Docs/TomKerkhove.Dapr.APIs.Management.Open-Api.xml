@@ -23,18 +23,6 @@
             <response code="200">Device information is provided</response>
             <response code="503">We are undergoing some issues</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SendMessage(System.String,TomKerkhove.Dapr.Actors.Device.Interface.Contracts.MessageTypes,System.String)">
-            <summary>
-                Send Message
-            </summary>
-            <remarks>Provides capability to update information for a given device.</remarks>
-            <param name="deviceId">Unique id for a given device</param>
-            <param name="messageType">Type of message sent to send to device</param>
-            <param name="payload">Payload to send to device</param>
-            <response code="202">Message sent to device</response>
-            <response code="400">Message sent to device</response>
-            <response code="503">We are undergoing some issues</response>
-        </member>
         <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DiscoveryController.GetDevice(System.String)">
             <summary>
                 Discover Device
@@ -63,6 +51,29 @@
             <remarks>Provides an indication about the health of the API.</remarks>
             <response code="200">API is healthy</response>
             <response code="503">API is unhealthy or in degraded state</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.MessageController.SendMessage(System.String,TomKerkhove.Dapr.Actors.Device.Interface.Contracts.MessageTypes,System.String)">
+            <summary>
+                Receive Message
+            </summary>
+            <remarks>Provides capability to update information for a given device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <param name="messageType">Type of message sent to send to device</param>
+            <param name="payload">Payload to send to device</param>
+            <response code="202">Message sent to device</response>
+            <response code="400">Message sent to device</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.TwinController.ReportTwinProperties(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+                Report Twin Properties
+            </summary>
+            <remarks>Provides capability to report one or more twin reported properties for the device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <param name="reportedProperties">Collection of reported properties for the device twin</param>
+            <response code="200">Properties were reported for the device</response>
+            <response code="400">Message sent to device</response>
+            <response code="503">We are undergoing some issues</response>
         </member>
         <member name="P:TomKerkhove.Dapr.APIs.Management.Exceptions.UnknownDeviceException.Imei">
             <summary>
