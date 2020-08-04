@@ -23,7 +23,8 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing
         {
             var twinChangedNotification = JsonConvert.DeserializeObject<TwinChangedNotification>(rawEvent);
             
-            await _deviceRegistryClient.NotifyTwinChangedAsync(notificationMetadata.DeviceId, twinChangedNotification);
+            var twinInformation = TwinInformation.Parse(twinChangedNotification);
+            await _deviceRegistryClient.NotifyTwinChangedAsync(notificationMetadata.DeviceId, twinInformation);
         }
     }
 }

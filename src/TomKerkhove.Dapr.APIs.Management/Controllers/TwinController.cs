@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using GuardNet;
@@ -57,7 +59,7 @@ namespace TomKerkhove.Dapr.APIs.Management.Controllers
         /// </summary>
         /// <remarks>Provides capability to report that twin information was changed on the device.</remarks>
         /// <param name="deviceId">Unique id for a given device</param>
-        /// <param name="twinChangedNotification">Notification concerning twin information that was changed</param>
+        /// <param name="twinInformation">Notification concerning twin information that was changed</param>
         /// <response code="200">Properties were reported for the device</response>
         /// <response code="400">Message sent to device</response>
         /// <response code="503">We are undergoing some issues</response>
@@ -67,9 +69,18 @@ namespace TomKerkhove.Dapr.APIs.Management.Controllers
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         [SwaggerResponseHeader(new[] { (int)HttpStatusCode.OK, (int)HttpStatusCode.BadRequest, (int)HttpStatusCode.InternalServerError }, "RequestId", "string", "The header that has a request ID that uniquely identifies this operation call")]
         [SwaggerResponseHeader(new[] { (int)HttpStatusCode.OK, (int)HttpStatusCode.BadRequest, (int)HttpStatusCode.InternalServerError }, "X-Transaction-Id", "string", "The header that has the transaction ID is used to correlate multiple operation calls.")]
-        public async Task<IActionResult> TwinChangedNotification([FromRoute] string deviceId, [Required, FromBody] TwinChangedNotification twinChangedNotification)
+        public async Task<IActionResult> TwinChangedNotification([FromRoute] string deviceId, [Required, FromBody] TwinInformation twinInformation)
         {
-            return Ok();
+            try
+            {
+                await _deviceRepository.NotifyTwinInformationChangedAsync(deviceId, twinInformation);
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

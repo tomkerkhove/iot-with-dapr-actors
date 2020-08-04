@@ -4,6 +4,15 @@
         <name>TomKerkhove.Dapr.APIs.Management</name>
     </assembly>
     <members>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.GetTags(System.String)">
+            <summary>
+                Get Device Tags
+            </summary>
+            <remarks>Provides capability to get latest tags for a given device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <response code="200">Tag information is provided</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
         <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.GetInfo(System.String)">
             <summary>
                 Get Device Info
@@ -75,13 +84,13 @@
             <response code="400">Message sent to device</response>
             <response code="503">We are undergoing some issues</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.TwinController.TwinChangedNotification(System.String,TomKerkhove.Dapr.Core.Contracts.TwinChangedNotification)">
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.TwinController.TwinChangedNotification(System.String,TomKerkhove.Dapr.Core.Contracts.TwinInformation)">
             <summary>
                 Twin Changed Notification
             </summary>
             <remarks>Provides capability to report that twin information was changed on the device.</remarks>
             <param name="deviceId">Unique id for a given device</param>
-            <param name="twinChangedNotification">Notification concerning twin information that was changed</param>
+            <param name="twinInformation">Notification concerning twin information that was changed</param>
             <response code="200">Properties were reported for the device</response>
             <response code="400">Message sent to device</response>
             <response code="503">We are undergoing some issues</response>

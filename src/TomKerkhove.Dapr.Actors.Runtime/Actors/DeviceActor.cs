@@ -19,7 +19,9 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
     internal class DeviceActor : ExtendedActor<DeviceActor>, IDeviceActor, IRemindable
     {
         private const string DeviceInfoKey = "device_info";
-        private const string TwinStateKey = "twin_state";
+        private const string DesiredPropertiesStateKey = "twin_state_desired";
+        private const string ReportedPropertiesStateKey = "twin_state_reported";
+        private const string TagStateKey = "twin_state_tags";
 
         public string DeviceId => Id.GetId();
 
@@ -35,7 +37,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         {
         }
 
-        public async Task ProvisionAsync(DeviceInfo info)
+        public async Task ProvisionAsync(DeviceInfo info, TwinInformation initialTwinInfo)
         {
             await SetInfoAsync(info);
             // TODO: Emit event
@@ -76,9 +78,18 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             await messageProcessor.ProcessAsync(type, rawMessage);
         }
 
-        public Task TwinInformationChangedAsync(TwinChangedNotification notification)
+        public async Task NotifyTwinInformationChangedAsync(TwinInformation notification)
         {
-            return Task.CompletedTask;
+            // TODO: Patch, not overwrite
+            await StateManager.AddOrUpdateStateAsync(ReportedPropertiesStateKey, notification.Properties.Reported, (stateName, currentValue) => notification.Properties.Reported);
+            await StateManager.AddOrUpdateStateAsync(DesiredPropertiesStateKey, notification.Properties.Desired, (stateName, currentValue) => notification.Properties.Desired);
+            await StateManager.AddOrUpdateStateAsync(TagStateKey, notification.Tags, (stateName, currentValue) => notification.Tags);
+        }
+
+        public async Task<Dictionary<string, string>> GetTagsAsync()
+        {
+            var potentialRawTags = await StateManager.TryGetStateAsync<Dictionary<string, string>>(TagStateKey);
+            return potentialRawTags.HasValue ? potentialRawTags.Value : new Dictionary<string, string>();
         }
 
         private async Task SetReminderToDetectDeviceGoingOfflineAsync()

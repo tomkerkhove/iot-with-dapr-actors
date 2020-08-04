@@ -28,7 +28,7 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Clients
             _logger = logger;
         }
 
-        public async Task NotifyTwinChangedAsync(string deviceId, TwinChangedNotification twinChangedNotification)
+        public async Task NotifyTwinChangedAsync(string deviceId, TwinInformation twinChangedNotification)
         {
             var baseUri = _configuration["DeviceRegistry.API.BaseUri"];
             var uri = $"{baseUri}/api/v1/devices/{deviceId}/twin/notifications/changed";
