@@ -75,6 +75,17 @@
             <response code="400">Message sent to device</response>
             <response code="503">We are undergoing some issues</response>
         </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.TwinController.TwinChangedNotification(System.String,TomKerkhove.Dapr.Core.Contracts.TwinChangedNotification)">
+            <summary>
+                Twin Changed Notification
+            </summary>
+            <remarks>Provides capability to report that twin information was changed on the device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <param name="twinChangedNotification">Notification concerning twin information that was changed</param>
+            <response code="200">Properties were reported for the device</response>
+            <response code="400">Message sent to device</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
         <member name="P:TomKerkhove.Dapr.APIs.Management.Exceptions.UnknownDeviceException.Imei">
             <summary>
             Imei of the device

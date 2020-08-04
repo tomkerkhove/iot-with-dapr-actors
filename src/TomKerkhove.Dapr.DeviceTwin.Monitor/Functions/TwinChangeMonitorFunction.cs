@@ -20,7 +20,7 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Functions
         }
 
         [FunctionName("twin-change-monitor")]
-        public async Task Run([EventHubTrigger("twin-changes", Connection = "TwinEventHubs")] EventData[] events, ILogger logger)
+        public async Task Run([EventHubTrigger("twin-changes", Connection = "EventHubs.ConnectionStrings.TwinChanges")] EventData[] events, ILogger logger)
         {
             await ProcessEventsAsync(events);
         }

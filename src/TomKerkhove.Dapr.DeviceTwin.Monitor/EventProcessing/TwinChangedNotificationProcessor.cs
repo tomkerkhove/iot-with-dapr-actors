@@ -19,13 +19,11 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing
             _logger = logger;
         }
 
-        public Task ProcessAsync(NotificationMetadata notificationMetadata, string rawEvent)
+        public async Task ProcessAsync(NotificationMetadata notificationMetadata, string rawEvent)
         {
             var twinChangedNotification = JsonConvert.DeserializeObject<TwinChangedNotification>(rawEvent);
             
-            // TODO: Forward to actor
-
-            return Task.CompletedTask;
+            await _deviceRegistryClient.NotifyTwinChangedAsync(notificationMetadata.DeviceId, twinChangedNotification);
         }
     }
 }
