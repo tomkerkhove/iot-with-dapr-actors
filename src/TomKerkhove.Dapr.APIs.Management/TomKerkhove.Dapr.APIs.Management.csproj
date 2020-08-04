@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TomKerkhove.Dapr.Actors.Device.Interface\TomKerkhove.Dapr.Actors.Device.Interface.csproj" />
+    <ProjectReference Include="..\TomKerkhove.Dapr.Core\TomKerkhove.Dapr.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

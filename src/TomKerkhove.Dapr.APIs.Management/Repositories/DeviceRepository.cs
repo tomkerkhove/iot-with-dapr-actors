@@ -5,9 +5,8 @@ using Dapr.Actors;
 using Dapr.Actors.Client;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Serilog.Core;
-using TomKerkhove.Dapr.Actors.Device.Interface;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
+using TomKerkhove.Dapr.Core.Actors.Device.Interface;
 
 namespace TomKerkhove.Dapr.APIs.Management.Repositories
 {
@@ -40,6 +39,12 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
             await proxy.ReceiveMessageAsync(messageType, payload);
         }
 
+        public async Task ReportPropertiesAsync(string deviceId, Dictionary<string, string> twin)
+        {
+            var proxy = CreateActorProxy(deviceId);
+            await proxy.SetReportedPropertyAsync(twin);
+        }
+
         private IDeviceActor CreateActorProxy(string deviceId)
         {
             try
@@ -56,12 +61,6 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
                 _logger.LogCritical(ex, "Failed to create Actor proxy");
                 throw;
             }
-        }
-
-        public async Task ReportPropertiesAsync(string deviceId, Dictionary<string, string> twin)
-        {
-            var proxy = CreateActorProxy(deviceId);
-            await proxy.SetReportedPropertyAsync(twin);
         }
     }
 }

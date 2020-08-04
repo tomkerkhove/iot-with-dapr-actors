@@ -13,7 +13,7 @@
             <response code="200">Device information is provided</response>
             <response code="503">We are undergoing some issues</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SetInfo(System.String,TomKerkhove.Dapr.Actors.Device.Interface.Contracts.DeviceInfo)">
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SetInfo(System.String,TomKerkhove.Dapr.Core.Actors.Device.Contracts.DeviceInfo)">
             <summary>
                 Set Device Info
             </summary>
@@ -52,7 +52,7 @@
             <response code="200">API is healthy</response>
             <response code="503">API is unhealthy or in degraded state</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.MessageController.SendMessage(System.String,TomKerkhove.Dapr.Actors.Device.Interface.Contracts.MessageTypes,System.String)">
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.MessageController.SendMessage(System.String,TomKerkhove.Dapr.Core.Actors.Device.Contracts.MessageTypes,System.String)">
             <summary>
                 Receive Message
             </summary>

@@ -7,10 +7,12 @@ using Dapr.Actors.Runtime;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TomKerkhove.Dapr.Actors.Device.Interface;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing;
+using TomKerkhove.Dapr.Actors.Runtime.Enums;
 using TomKerkhove.Dapr.Actors.Runtime.Extensions;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
+using TomKerkhove.Dapr.Core.Actors.Device.Interface;
+using TomKerkhove.Dapr.Core.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 {
@@ -72,6 +74,11 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
             var messageProcessor = Services.GetService<MessageProcessor>();
             await messageProcessor.ProcessAsync(type, rawMessage);
+        }
+
+        public Task TwinInformationChangedAsync(TwinChangedNotification notification)
+        {
+            return Task.CompletedTask;
         }
 
         private async Task SetReminderToDetectDeviceGoingOfflineAsync()

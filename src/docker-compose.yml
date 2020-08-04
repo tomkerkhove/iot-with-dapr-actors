@@ -51,6 +51,17 @@ services:
     depends_on:
       - tomkerkhove.dapr.apis.management
     network_mode: "service:tomkerkhove.dapr.apis.management"
+  # Device Twin Change Monitor
+  # Azure Functions in Docker tools for Visual Studio is not supported yet, see https://github.com/microsoft/DockerTools/issues/124.
+  # tomkerkhove.dapr.workers.devices.twinchanges:
+  #   image: tomkerkhove/tomkerkhove.dapr.workers.devices.twinchanges
+  #   build:
+  #     context: .
+  #     dockerfile: TomKerkhove.Dapr.DeviceTwin.Monitor/Dockerfile
+  #   depends_on:
+  #     - tomkerkhove.dapr.apis.management
+  #   networks:
+  #     - dapr
   # Dapr Infrastructure
   placement:
     image: "daprio/dapr"

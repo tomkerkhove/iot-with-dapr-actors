@@ -7,8 +7,8 @@ using GuardNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.APIs.Management.Repositories;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
 
 namespace TomKerkhove.Dapr.APIs.Management.Controllers
 {
