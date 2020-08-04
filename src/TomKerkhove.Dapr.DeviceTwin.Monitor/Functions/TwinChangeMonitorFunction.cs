@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.EventHubs;
@@ -12,7 +8,7 @@ using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing;
 
 namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Functions
 {
-    public class TwinChangeMonitorFunction
+    public class TwinChangeMonitorFunction : AzureEventHubsFunction
     {
         private readonly EventProcessor _eventProcessor;
 
@@ -26,47 +22,14 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Functions
         [FunctionName("twin-change-monitor")]
         public async Task Run([EventHubTrigger("twin-changes", Connection = "TwinEventHubs")] EventData[] events, ILogger logger)
         {
-            var exceptions = new List<Exception>();
-
-            var allEventTasks = new List<Task>();
-            foreach (EventData eventData in events)
-            {
-                var task = ProcessEventAsync(eventData, logger, exceptions);
-                allEventTasks.Add(task);
-            }
-
-            await Task.WhenAll(allEventTasks);
-
-            // Once processing of the batch is complete, if any messages in the batch failed processing throw an exception so that there is a record of the failure.
-            if (exceptions.Count > 1)
-            { 
-                throw new AggregateException(exceptions);
-            }
-
-            if (exceptions.Count == 1)
-            { 
-                throw exceptions.Single();
-            }
+            await ProcessEventsAsync(events);
         }
 
-        private async Task ProcessEventAsync(EventData eventData, ILogger logger, List<Exception> exceptions)
+        protected override async Task ProcessIndividualEventAsync(EventData eventData, string rawEventPayload)
         {
-            try
-            {
-                if (eventData.Body == null || eventData.Body.Array == null)
-                {
-                    throw new Exception("Message does not contain a payload");
-                }
+            var notificationMetadata = NotificationMetadata.Parse(eventData);
 
-                string rawEvent = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
-                var notificationMetadata = NotificationMetadata.Parse(eventData);
-
-                await _eventProcessor.ProcessAsync(notificationMetadata.MessageSchema, notificationMetadata, rawEvent);
-            }
-            catch (Exception exception)
-            {
-                exceptions.Add(exception);
-            }
+            await _eventProcessor.ProcessAsync(notificationMetadata.MessageSchema, notificationMetadata, rawEventPayload);
         }
     }
 }
