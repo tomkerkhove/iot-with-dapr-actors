@@ -1,0 +1,9 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "DeviceRegistry.API.BaseUri": "<omitted>",
+    "EventHubs.ConnectionStrings.TwinChanges": "<omitted>",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  }
+}

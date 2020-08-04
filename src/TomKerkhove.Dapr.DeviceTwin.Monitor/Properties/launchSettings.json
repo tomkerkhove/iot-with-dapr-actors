@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "TomKerkhove.Dapr.DeviceTwin.Monitor": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 31266,
+      "useSSL": false
+    }
+  }
+}

@@ -4,8 +4,8 @@ using GuardNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.APIs.Management.Repositories;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
 
 namespace TomKerkhove.Dapr.APIs.Management.Controllers
 {
@@ -20,6 +20,24 @@ namespace TomKerkhove.Dapr.APIs.Management.Controllers
             Guard.NotNull(deviceRepository,nameof(deviceRepository));
 
             _deviceRepository = deviceRepository;
+        }
+
+        /// <summary>
+        ///     Get Device Tags
+        /// </summary>
+        /// <remarks>Provides capability to get latest tags for a given device.</remarks>
+        /// <param name="deviceId">Unique id for a given device</param>
+        /// <response code="200">Tag information is provided</response>
+        /// <response code="503">We are undergoing some issues</response>
+        [HttpGet("{deviceId}/tags", Name = "Device_GetTags")]
+        [ProducesResponseType(typeof(DeviceInfo), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        [SwaggerResponseHeader(new[] { (int)HttpStatusCode.OK, (int)HttpStatusCode.InternalServerError }, "RequestId", "string", "The header that has a request ID that uniquely identifies this operation call")]
+        [SwaggerResponseHeader(new[] { (int)HttpStatusCode.OK, (int)HttpStatusCode.InternalServerError }, "X-Transaction-Id", "string", "The header that has the transaction ID is used to correlate multiple operation calls.")]
+        public async Task<IActionResult> GetTags([FromRoute] string deviceId)
+        {
+            var tags = await _deviceRepository.GetTagsAsync(deviceId);
+            return Ok(tags);
         }
 
         /// <summary>

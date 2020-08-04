@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing.Interfaces;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing
 {

@@ -1,4 +1,4 @@
-﻿namespace TomKerkhove.Dapr.Actors.Runtime
+﻿namespace TomKerkhove.Dapr.Actors.Runtime.Enums
 {
     public enum ReminderTypes
     {

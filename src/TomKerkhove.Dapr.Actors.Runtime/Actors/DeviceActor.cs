@@ -7,17 +7,21 @@ using Dapr.Actors.Runtime;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TomKerkhove.Dapr.Actors.Device.Interface;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing;
+using TomKerkhove.Dapr.Actors.Runtime.Enums;
 using TomKerkhove.Dapr.Actors.Runtime.Extensions;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
+using TomKerkhove.Dapr.Core.Actors.Device.Interface;
+using TomKerkhove.Dapr.Core.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 {
     internal class DeviceActor : ExtendedActor<DeviceActor>, IDeviceActor, IRemindable
     {
         private const string DeviceInfoKey = "device_info";
-        private const string TwinStateKey = "twin_state";
+        private const string DesiredPropertiesStateKey = "twin_state_desired";
+        private const string ReportedPropertiesStateKey = "twin_state_reported";
+        private const string TagStateKey = "twin_state_tags";
 
         public string DeviceId => Id.GetId();
 
@@ -33,7 +37,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         {
         }
 
-        public async Task ProvisionAsync(DeviceInfo info)
+        public async Task ProvisionAsync(DeviceInfo info, TwinInformation initialTwinInfo)
         {
             await SetInfoAsync(info);
             // TODO: Emit event
@@ -72,6 +76,20 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
             var messageProcessor = Services.GetService<MessageProcessor>();
             await messageProcessor.ProcessAsync(type, rawMessage);
+        }
+
+        public async Task NotifyTwinInformationChangedAsync(TwinInformation notification)
+        {
+            // TODO: Patch, not overwrite
+            await StateManager.AddOrUpdateStateAsync(ReportedPropertiesStateKey, notification.Properties.Reported, (stateName, currentValue) => notification.Properties.Reported);
+            await StateManager.AddOrUpdateStateAsync(DesiredPropertiesStateKey, notification.Properties.Desired, (stateName, currentValue) => notification.Properties.Desired);
+            await StateManager.AddOrUpdateStateAsync(TagStateKey, notification.Tags, (stateName, currentValue) => notification.Tags);
+        }
+
+        public async Task<Dictionary<string, string>> GetTagsAsync()
+        {
+            var potentialRawTags = await StateManager.TryGetStateAsync<Dictionary<string, string>>(TagStateKey);
+            return potentialRawTags.HasValue ? potentialRawTags.Value : new Dictionary<string, string>();
         }
 
         private async Task SetReminderToDetectDeviceGoingOfflineAsync()

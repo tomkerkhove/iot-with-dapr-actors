@@ -5,9 +5,9 @@ using Dapr.Actors;
 using Dapr.Actors.Client;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Serilog.Core;
-using TomKerkhove.Dapr.Actors.Device.Interface;
-using TomKerkhove.Dapr.Actors.Device.Interface.Contracts;
+using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
+using TomKerkhove.Dapr.Core.Actors.Device.Interface;
+using TomKerkhove.Dapr.Core.Contracts;
 
 namespace TomKerkhove.Dapr.APIs.Management.Repositories
 {
@@ -24,20 +24,62 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
 
         public async Task<DeviceInfo> GetDataAsync(string deviceId)
         {
-            var proxy = CreateActorProxy(deviceId);
-            return await proxy.GetInfoAsync();
+            return await Interact(deviceId, deviceActor => deviceActor.GetInfoAsync());
         }
 
         public async Task SetDataAsync(string deviceId, DeviceInfo newData)
         {
-            var proxy = CreateActorProxy(deviceId);
-            await proxy.SetInfoAsync(newData);
+            await Interact(deviceId, deviceActor => deviceActor.SetInfoAsync(newData));
         }
 
         public async Task ReceiveMessageAsync(string deviceId, MessageTypes messageType, string payload)
         {
+            await Interact(deviceId, deviceActor => deviceActor.ReceiveMessageAsync(messageType, payload));
+        }
+
+        public async Task ReportPropertiesAsync(string deviceId, Dictionary<string, string> twin)
+        {
+            await Interact(deviceId, deviceActor => deviceActor.SetReportedPropertyAsync(twin));
+        }
+
+        public async Task NotifyTwinInformationChangedAsync(string deviceId, TwinInformation twinChangedNotification)
+        {
+            await Interact(deviceId, deviceActor => deviceActor.NotifyTwinInformationChangedAsync(twinChangedNotification));
+        }
+
+        public async Task<Dictionary<string, string>> GetTagsAsync(string deviceId)
+        {
+            return await Interact(deviceId, deviceActor => deviceActor.GetTagsAsync());
+        }
+
+        private async Task Interact(string deviceId, Func<IDeviceActor, Task> interactionFunc)
+        {
             var proxy = CreateActorProxy(deviceId);
-            await proxy.ReceiveMessageAsync(messageType, payload);
+            
+            try
+            {
+                await interactionFunc(proxy);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to interact with Actor proxy");
+                throw;
+            }
+        }
+
+        private async Task<TResult> Interact<TResult>(string deviceId, Func<IDeviceActor, Task<TResult>> interactionFunc)
+        {
+            var proxy = CreateActorProxy(deviceId);
+
+            try
+            {
+                return await interactionFunc(proxy);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to interact with Actor proxy");
+                throw;
+            }
         }
 
         private IDeviceActor CreateActorProxy(string deviceId)
@@ -56,12 +98,6 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
                 _logger.LogCritical(ex, "Failed to create Actor proxy");
                 throw;
             }
-        }
-
-        public async Task ReportPropertiesAsync(string deviceId, Dictionary<string, string> twin)
-        {
-            var proxy = CreateActorProxy(deviceId);
-            await proxy.SetReportedPropertyAsync(twin);
         }
     }
 }
