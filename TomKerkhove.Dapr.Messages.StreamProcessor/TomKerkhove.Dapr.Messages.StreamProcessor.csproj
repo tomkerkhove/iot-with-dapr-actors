@@ -1,20 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
-    <DockerFastModeProjectMountDirectory>/home/site/wwwroot</DockerFastModeProjectMountDirectory>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Guard.NET" Version="1.2.0" />
-    <PackageReference Include="Microsoft.Azure.Devices" Version="1.22.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.6" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.9" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\TomKerkhove.Dapr.Core\TomKerkhove.Dapr.Core.csproj" />
-    <ProjectReference Include="..\TomKerkhove.Dapr.Runtimes.AzureFunctions\TomKerkhove.Dapr.Runtimes.AzureFunctions.csproj" />
+    <ProjectReference Include="..\src\TomKerkhove.Dapr.Core\TomKerkhove.Dapr.Core.csproj" />
+    <ProjectReference Include="..\src\TomKerkhove.Dapr.Runtimes.AzureFunctions\TomKerkhove.Dapr.Runtimes.AzureFunctions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TomKerkhove.Dapr.Messages.StreamProcessor": {
+      "commandName": "Project",
+      "commandLineArgs": "host start --port 7074"
+    }
+  }
+}

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventHubs;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Functions
+namespace TomKerkhove.Dapr.Runtimes.AzureFunctions.Functions
 {
     public abstract class AzureEventHubsFunction
     {

@@ -22,7 +22,7 @@
             <response code="200">Device information is provided</response>
             <response code="503">We are undergoing some issues</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SetInfo(System.String,TomKerkhove.Dapr.Core.Actors.Device.Contracts.DeviceInfo)">
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.SetInfo(System.String,TomKerkhove.Dapr.Core.Contracts.DeviceInfo)">
             <summary>
                 Set Device Info
             </summary>
@@ -61,14 +61,14 @@
             <response code="200">API is healthy</response>
             <response code="503">API is unhealthy or in degraded state</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.MessageController.SendMessage(System.String,TomKerkhove.Dapr.Core.Actors.Device.Contracts.MessageTypes,System.String)">
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.MessageController.SendMessage(System.String,TomKerkhove.Dapr.Core.Contracts.MessageTypes,TomKerkhove.Dapr.Core.Contracts.Message)">
             <summary>
                 Receive Message
             </summary>
             <remarks>Provides capability to update information for a given device.</remarks>
             <param name="deviceId">Unique id for a given device</param>
             <param name="messageType">Type of message sent to send to device</param>
-            <param name="payload">Payload to send to device</param>
+            <param name="message">Payload to send to device</param>
             <response code="202">Message sent to device</response>
             <response code="400">Message sent to device</response>
             <response code="503">We are undergoing some issues</response>

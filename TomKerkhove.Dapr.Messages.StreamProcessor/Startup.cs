@@ -1,11 +1,10 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using TomKerkhove.Dapr.Core.Clients;
-using TomKerkhove.Dapr.DeviceTwin.Monitor;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing;
+using TomKerkhove.Dapr.Messages.StreamProcessor;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor
+namespace TomKerkhove.Dapr.Messages.StreamProcessor
 {
     public class Startup : FunctionsStartup
     {
@@ -15,8 +14,6 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor
         {
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<DeviceRegistryClient>();
-            builder.Services.AddTransient<TwinChangedNotificationProcessor>();
-            builder.Services.AddTransient<EventProcessor>();
 
             Services = builder.Services.BuildServiceProvider();
         }

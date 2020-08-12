@@ -10,9 +10,10 @@ using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing;
 using TomKerkhove.Dapr.Actors.Runtime.Enums;
 using TomKerkhove.Dapr.Actors.Runtime.Extensions;
-using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
 using TomKerkhove.Dapr.Core.Actors.Device.Interface;
 using TomKerkhove.Dapr.Core.Contracts;
+using Message = TomKerkhove.Dapr.Core.Contracts.Message;
+using TransportType = Microsoft.Azure.Devices.Client.TransportType;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 {
@@ -53,7 +54,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             contextualInformation.Add("IMEI", info.IMEI);
 
             Logger.LogEvent("Device Provisioned", contextualInformation);
-            Logger.LogMetric("Device Provisioned", 1, contextualInformation);
+            LogMetric("Device Provisioned", 1, contextualInformation);
         }
 
         public async Task SetInfoAsync(DeviceInfo data)
@@ -67,15 +68,14 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             return potentialData.HasValue ? potentialData.Value : null;
         }
 
-        public async Task ReceiveMessageAsync(MessageTypes type, string rawMessage)
+        public async Task ReceiveMessageAsync(MessageTypes type, Message message)
         {
-            var contextualInformation = ComposeRequiredContextualInformation();
-            Logger.LogMetric("Device Message Received", 1, contextualInformation);
+            LogMetric("Device Message Received", 1);
 
             await SetReminderToDetectDeviceGoingOfflineAsync();
 
             var messageProcessor = Services.GetService<MessageProcessor>();
-            await messageProcessor.ProcessAsync(type, rawMessage);
+            await messageProcessor.ProcessAsync(type, message.Content);
         }
 
         public async Task NotifyTwinInformationChangedAsync(TwinInformation notification)
@@ -122,8 +122,10 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             try
             {
                 _deviceClient = await CreateIoTHubDeviceClient();
-
+                
                 Logger.LogInformation("Device {DeviceId} activated", DeviceId);
+
+                LogMetric("Actor Activated", 1);
             }
             catch (Exception ex)
             {
@@ -148,6 +150,8 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
             try
             {
+                LogMetric("Actor Deactivated", 1);
+
                 _deviceClient.Dispose();
             }
             finally
@@ -161,7 +165,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         public Task ReceiveReminderAsync(string reminderName, byte[] state, TimeSpan dueTime, TimeSpan period)
         {
             var isKnownReminder = Enum.TryParse(reminderName, out ReminderTypes reminderType);
-            if (isKnownReminder)
+            if (isKnownReminder == false)
             {
                 Logger.LogWarning("Reminder was received for {ReminderName} which is not known and unhandled", reminderName);
                 return Task.CompletedTask;
@@ -182,8 +186,22 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             var contextualInformation = ComposeRequiredContextualInformation();
 
             Logger.LogEvent("Device Inactive", contextualInformation);
-            Logger.LogMetric("Device Inactive", 1, contextualInformation);
+            LogMetric("Device Inactive", 1, contextualInformation);
             // TODO: Emit event grid event
+        }
+
+        private void LogMetric(string metricName, double metricValue , Dictionary<string, object> contextualInformation = null)
+        {
+            var requiredContextualInformation = ComposeRequiredContextualInformation();
+            
+            contextualInformation ??= new Dictionary<string, object>();
+
+            foreach (var requiredContextInfo in requiredContextualInformation)
+            {
+                contextualInformation.TryAdd(requiredContextInfo.Key, requiredContextInfo.Value);
+            }
+
+            Logger.LogMetric(metricName, metricValue);
         }
 
         private Dictionary<string, object> ComposeRequiredContextualInformation()

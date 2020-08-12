@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Filters;
 using TomKerkhove.Dapr.APIs.Management.Exceptions;
 using TomKerkhove.Dapr.APIs.Management.Repositories;
-using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
+using TomKerkhove.Dapr.Core.Contracts;
 
 namespace TomKerkhove.Dapr.APIs.Management.Controllers
 {

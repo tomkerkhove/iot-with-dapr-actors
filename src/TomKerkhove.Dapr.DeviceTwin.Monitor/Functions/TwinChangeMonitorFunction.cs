@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts;
 using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing;
+using TomKerkhove.Dapr.Runtimes.AzureFunctions.Functions;
 
 namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Functions
 {

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using TomKerkhove.Dapr.Core.Clients;
 using TomKerkhove.Dapr.Core.Contracts;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.Clients;
 using TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts;
 using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing.Interfaces;
 
