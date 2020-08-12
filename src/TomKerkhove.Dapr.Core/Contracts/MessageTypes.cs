@@ -1,4 +1,4 @@
-﻿namespace TomKerkhove.Dapr.Core.Actors.Device.Contracts
+﻿namespace TomKerkhove.Dapr.Core.Contracts
 {
     public enum MessageTypes
     {

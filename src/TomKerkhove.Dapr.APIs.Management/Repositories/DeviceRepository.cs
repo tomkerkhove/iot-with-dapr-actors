@@ -5,7 +5,6 @@ using Dapr.Actors;
 using Dapr.Actors.Client;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
 using TomKerkhove.Dapr.Core.Actors.Device.Interface;
 using TomKerkhove.Dapr.Core.Contracts;
 
@@ -32,9 +31,9 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
             await Interact(deviceId, deviceActor => deviceActor.SetInfoAsync(newData));
         }
 
-        public async Task ReceiveMessageAsync(string deviceId, MessageTypes messageType, string payload)
+        public async Task ReceiveMessageAsync(string deviceId, MessageTypes messageType, Message message)
         {
-            await Interact(deviceId, deviceActor => deviceActor.ReceiveMessageAsync(messageType, payload));
+            await Interact(deviceId, deviceActor => deviceActor.ReceiveMessageAsync(messageType, message));
         }
 
         public async Task ReportPropertiesAsync(string deviceId, Dictionary<string, string> twin)

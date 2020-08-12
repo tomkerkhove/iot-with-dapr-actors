@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing.Interfaces;
-using TomKerkhove.Dapr.Core.Actors.Device.Contracts;
+using TomKerkhove.Dapr.Core.Contracts;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing
 {

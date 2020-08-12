@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GuardNet;
@@ -9,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TomKerkhove.Dapr.Core.Contracts;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Clients
+namespace TomKerkhove.Dapr.Core.Clients
 {
     public class DeviceRegistryClient
     {
@@ -30,9 +28,21 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Clients
 
         public async Task NotifyTwinChangedAsync(string deviceId, TwinInformation twinChangedNotification)
         {
-            var baseUri = _configuration["DeviceRegistry.API.BaseUri"];
+            var baseUri = GetBaseUri();
             var uri = $"{baseUri}/api/v1/devices/{deviceId}/twin/notifications/changed";
-            var rawNotification = JsonConvert.SerializeObject(twinChangedNotification);
+            await PostRequestAsync(uri, twinChangedNotification);
+        }
+
+        public async Task SendMessageAsync(string deviceId, MessageTypes messageType, string rawMessage)
+        {
+            var baseUri = GetBaseUri();
+            var uri = $"{baseUri}/api/v1/devices/{deviceId}/messages/{messageType}";
+            await PostRequestAsync(uri, new Message{ Content = rawMessage });
+        }
+
+        private async Task PostRequestAsync(string uri, object body)
+        {
+            var rawNotification = JsonConvert.SerializeObject(body);
 
             var request = new HttpRequestMessage(HttpMethod.Post, uri)
             {
@@ -41,6 +51,11 @@ namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Clients
 
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
+        }
+
+        private string GetBaseUri()
+        {
+            return _configuration["DeviceRegistry.API.BaseUri"];
         }
     }
 }

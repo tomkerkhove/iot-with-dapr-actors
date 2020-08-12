@@ -7,17 +7,17 @@ namespace TomKerkhove.Dapr.Core.Contracts
     public class TwinInformation
     {
         /// <summary>
-        /// Twin's Version
+        ///     Twin's Version
         /// </summary>
         public long Version { get; set; }
 
         /// <summary>
-        /// Gets and sets the <see cref="Twin"/> tags.
+        ///     Gets and sets the <see cref="Twin" /> tags.
         /// </summary>
         public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
-        /// Gets and sets the <see cref="Twin"/> properties.
+        ///     Gets and sets the <see cref="Twin" /> properties.
         /// </summary>
         public CustomTwinProperties Properties { get; set; } = new CustomTwinProperties();
 
@@ -28,19 +28,28 @@ namespace TomKerkhove.Dapr.Core.Contracts
                 Version = twinChangedNotification.Version
             };
 
-            foreach (KeyValuePair<string, object> tag in twinChangedNotification.Tags)
+            if (twinChangedNotification.Tags != null)
             {
-                twinInfo.Tags.Add(tag.Key, tag.Value.ToString());
+                foreach (KeyValuePair<string, object> tag in twinChangedNotification.Tags)
+                {
+                    twinInfo.Tags.Add(tag.Key, tag.Value.ToString());
+                }
             }
 
-            foreach (KeyValuePair<string, object> reportedProperty in twinChangedNotification.Properties.Reported)
+            if (twinChangedNotification.Properties?.Reported != null)
             {
-                twinInfo.Properties.Reported.Add(reportedProperty.Key, reportedProperty.Value.ToString());
+                foreach (KeyValuePair<string, object> reportedProperty in twinChangedNotification.Properties.Reported)
+                {
+                    twinInfo.Properties.Reported.Add(reportedProperty.Key, reportedProperty.Value.ToString());
+                }
             }
 
-            foreach (KeyValuePair<string, object> desiredProperty in twinChangedNotification.Properties.Desired)
+            if (twinChangedNotification.Properties?.Desired != null)
             {
-                twinInfo.Properties.Desired.Add(desiredProperty.Key, desiredProperty.Value.ToString());
+                foreach (KeyValuePair<string, object> desiredProperty in twinChangedNotification.Properties.Desired)
+                {
+                    twinInfo.Properties.Desired.Add(desiredProperty.Key, desiredProperty.Value.ToString());
+                }
             }
 
             return twinInfo;

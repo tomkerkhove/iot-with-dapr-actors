@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "EventHubs.ConnectionStrings.DeviceMessages": "<omitted>",
+    "DeviceRegistry.API.BaseUri": "<omitted>",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  }
+}
