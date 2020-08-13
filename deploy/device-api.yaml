@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dapr-sandbox-apis-device-secrets
+  labels:
+    app: dapr-sandbox
+    component: actors
+    area: app-runtime
+data:
+  applicationInsightsKey: NjQyZGM1MTYtZWY5Zi00NzVmLTkzMzAtMWMxN2E3MTM2NTFi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dapr-sandbox-apis-device
+  labels:
+    app: dapr-sandbox
+    component: device-api
+    area: app-runtime
+spec:
+  selector:
+    matchLabels:
+      app: dapr-sandbox
+      component: device-api
+      area: app-runtime
+  template:
+    metadata:
+      labels:
+        app: dapr-sandbox
+        component: device-api
+        area: app-runtime
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "device-api"
+    spec:
+      containers:
+      - name: device-api
+        image: tomkerkhove/dapr-sandbox-apis-device:dev
+        ports:
+        - containerPort: 80
+        env:
+        - name: APPLICATION_INSIGHTS
+          valueFrom:
+            secretKeyRef:
+              name: dapr-sandbox-apis-device-secrets
+              key: applicationInsightsKey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dapr-sandbox-apis-device-service
+  labels:
+    app: dapr-sandbox
+    component: device-api
+    area: app-runtime
+spec:
+  selector:
+    app: dapr-sandbox
+    component: device-api
+    area: app-runtime
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dapr-sandbox-apis-device-load-balancer
+  labels:
+    app: dapr-sandbox
+    component: device-api
+    area: app-runtime
+spec:
+  selector:
+    app: dapr-sandbox
+    component: device-api
+    area: app-runtime
+  ports:
+    - protocol: TCP
+      port: 9876
+      targetPort: 80
+  type: LoadBalancer

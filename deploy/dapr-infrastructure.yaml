@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dapr-infrastructure-secrets
+  labels:
+    app: dapr-infrastructure
+data:
+  stateStoreConnectionstring: QWNjb3VudEVuZHBvaW50PWh0dHBzOi8vZGFwci1zdGF0ZS1zdG9yZS1zYW5kYm94LmRvY3VtZW50cy5henVyZS5jb206NDQzLztBY2NvdW50S2V5PUJIdmoybVhwNGFKVG5VOXo0Qnk0V1ZXMmRIcHlDaXJyWEI5aEYxcEdqWktDcVdYUExPb3owWmlqWTdVRGRNRVZ6TzhvZUNYQU4ydWYxR2NkWDhjVXlRPT07Cg==
+---
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: dapr-state-store
+  labels:
+    app: dapr-infrastructure
+spec:
+  type: state.azure.cosmosdb
+  metadata:
+  - name: url
+    value: https://dapr-state-store-sandbox.documents.azure.com:443
+  - name: masterKey
+    valueFrom:
+      secretKeyRef:
+        name: dapr-infrastructure-secrets
+        key: stateStoreConnectionstring
+  - name: database
+    value: "platform"
+  - name: collection
+    value: "state-store"
+  - name: actorStateStore
+    value: "true"

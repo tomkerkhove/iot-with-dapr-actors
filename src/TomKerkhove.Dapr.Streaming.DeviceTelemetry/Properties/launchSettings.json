@@ -3,6 +3,12 @@
     "TomKerkhove.Dapr.Messages.StreamProcessor": {
       "commandName": "Project",
       "commandLineArgs": "host start --port 7074"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 34815,
+      "useSSL": false
     }
   }
 }
