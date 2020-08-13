@@ -1,4 +1,4 @@
-﻿namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts
+﻿namespace TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts
 {
     public enum NotificationMessageSchemas
     {

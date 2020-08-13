@@ -3,10 +3,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TomKerkhove.Dapr.Core.Clients;
 using TomKerkhove.Dapr.Core.Contracts;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing.Interfaces;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing.Interfaces;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing
+namespace TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing
 {
     public class TwinChangedNotificationProcessor : IEventProcessor
     {

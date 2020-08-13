@@ -1,10 +1,10 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using TomKerkhove.Dapr.Core.Clients;
-using TomKerkhove.Dapr.Messages.StreamProcessor;
+using TomKerkhove.Dapr.Streaming.DeviceTelemetry;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace TomKerkhove.Dapr.Messages.StreamProcessor
+namespace TomKerkhove.Dapr.Streaming.DeviceTelemetry
 {
     public class Startup : FunctionsStartup
     {

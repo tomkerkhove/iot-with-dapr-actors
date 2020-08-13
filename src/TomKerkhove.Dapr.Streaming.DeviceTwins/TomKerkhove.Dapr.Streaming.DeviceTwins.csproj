@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TomKerkhove.Dapr.Core\TomKerkhove.Dapr.Core.csproj" />
-    <ProjectReference Include="..\TomKerkhove.Dapr.Runtimes.AzureFunctions\TomKerkhove.Dapr.Runtimes.AzureFunctions.csproj" />
+    <ProjectReference Include="..\TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions\TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

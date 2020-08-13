@@ -2,7 +2,7 @@
 using GuardNet;
 using Microsoft.Azure.EventHubs;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts
+namespace TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts
 {
     public class NotificationMetadata
     {

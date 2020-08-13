@@ -6,9 +6,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.Core.Clients;
 using TomKerkhove.Dapr.Core.Contracts;
-using TomKerkhove.Dapr.Runtimes.AzureFunctions.Functions;
+using TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions.Functions;
 
-namespace TomKerkhove.Dapr.Messages.StreamProcessor.Functions
+namespace TomKerkhove.Dapr.Streaming.DeviceTelemetry.Functions
 {
     public class MessageProcessingFunction : AzureEventHubsFunction
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing.Interfaces
+namespace TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing.Interfaces
 {
     public interface IEventProcessor
     {

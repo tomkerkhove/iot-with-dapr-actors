@@ -3,11 +3,11 @@ using GuardNet;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing;
-using TomKerkhove.Dapr.Runtimes.AzureFunctions.Functions;
+using TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions.Functions;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.Functions
+namespace TomKerkhove.Dapr.Streaming.DeviceTwins.Functions
 {
     public class TwinChangeMonitorFunction : AzureEventHubsFunction
     {

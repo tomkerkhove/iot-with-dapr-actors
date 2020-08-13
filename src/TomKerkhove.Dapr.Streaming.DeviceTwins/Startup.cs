@@ -1,11 +1,11 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using TomKerkhove.Dapr.Core.Clients;
-using TomKerkhove.Dapr.DeviceTwin.Monitor;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing;
+using TomKerkhove.Dapr.Streaming.DeviceTwins;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor
+namespace TomKerkhove.Dapr.Streaming.DeviceTwins
 {
     public class Startup : FunctionsStartup
     {

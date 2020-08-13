@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.Contracts;
-using TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing.Interfaces;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts;
+using TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing.Interfaces;
 
-namespace TomKerkhove.Dapr.DeviceTwin.Monitor.EventProcessing
+namespace TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing
 {
     public class EventProcessor
     {
