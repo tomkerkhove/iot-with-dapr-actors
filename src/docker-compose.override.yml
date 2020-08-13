@@ -6,7 +6,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - APPLICATION_INSIGHTS=<omitted>
-      - IOTHUB_CONNECTIONSTRING_DEVICE_demo-device=<omitted>
+      - "IOTHUB_CONNECTIONSTRING_DEVICE_demo-device=HostName=dapr-actors.azure-devices.net;DeviceId=demo-device;SharedAccessKey=sVjPhY+AbDis3sdvMuPIOPqBEaVS7ZaD8PF1TvFhNlA="
     ports:
       - "881:80"
     volumes:

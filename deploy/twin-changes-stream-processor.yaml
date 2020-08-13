@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dapr-sandbox-twin-change-secrets
+  labels:
+    app: dapr-sandbox
+    component: actors
+    area: app-runtime
+data:
+  functionStorage: RGVmYXVsdEVuZHBvaW50c1Byb3RvY29sPWh0dHBzO0FjY291bnROYW1lPWRhcHJhY3RvcnM7QWNjb3VudEtleT1sclBydkEzZm5rdSt6VWRvandlYWF3NDFodVJxLzUxUXJGQm40L0N4RDFMYmFOaHF6THRqWHMxM0ZFblMyeGY0NDJYV0puc2VjQ1hQMTBFV0ZOY1E2dz09O0VuZHBvaW50U3VmZml4PWNvcmUud2luZG93cy5uZXQ=
+  eventHubsConnectionstring: RW5kcG9pbnQ9c2I6Ly9kYXByLWFjdG9ycy5zZXJ2aWNlYnVzLndpbmRvd3MubmV0LztTaGFyZWRBY2Nlc3NLZXlOYW1lPU1hbmFnZTtTaGFyZWRBY2Nlc3NLZXk9RE5Tb09YOFU0aTM2bFI5LzdjM0lHSWQ4UjJZVU1RSHNvMVhZR0xFOWNGQT07RW50aXR5UGF0aD10d2luLWNoYW5nZXM=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twin-changes-stream-processor
+  labels:
+    app: dapr-sandbox
+    component: twin-changes
+    area: app-runtime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dapr-sandbox
+      component: twin-changes
+      area: app-runtime
+  template:
+    metadata:
+      labels:
+        app: dapr-sandbox
+        component: twin-changes
+        area: app-runtime
+    spec:
+      containers:
+      - name: twin-changes
+        image: tomkerkhove/dapr-sandbox-streaming-device-twins:dev
+        ports:
+        # Port for HTTP triggered functions
+        - containerPort: 80
+        env:
+        - name: AzureFunctionsJobHost__functions__0
+          value: twin-change-monitor
+        - name: DeviceRegistry.API.BaseUri
+          value: "http://dapr-sandbox-apis-device-service"
+        - name: AzureWebJobsStorage
+          valueFrom:
+            secretKeyRef:
+              name: dapr-sandbox-twin-change-secrets
+              key: functionStorage
+        - name: EventHubs.ConnectionStrings.TwinChanges
+          valueFrom:
+            secretKeyRef:
+              name: dapr-sandbox-twin-change-secrets
+              key: eventHubsConnectionstring
+---
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: twin-changes-autoscale
+  labels:
+    app: dapr-sandbox
+    component: twin-changes
+    area: autoscaling
+spec:
+  scaleTargetRef:
+    deploymentName: twin-changes-stream-processor
+  triggers:
+  - type: azure-eventhub
+    metadata:
+      connection: EventHubs.ConnectionStrings.DeviceMessages
+      storageConnection: AzureWebJobsStorage
+      blobContainer: azure-webjobs-eventhub
