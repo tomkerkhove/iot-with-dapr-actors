@@ -70,7 +70,11 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
         public async Task ReceiveMessageAsync(MessageTypes type, Message message)
         {
-            LogMetric("Device Message Received", 1);
+            var context = new Dictionary<string, object>
+            {
+                {"MessageType", type}
+            };
+            LogMetric("Device Message Received", 1, context);
 
             await SetReminderToDetectDeviceGoingOfflineAsync();
 
@@ -95,7 +99,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         private async Task SetReminderToDetectDeviceGoingOfflineAsync()
         {
             await UnregisterReminderAsync(ReminderTypes.LastMessageRecieved.ToString());
-            await RegisterReminderAsync(ReminderTypes.LastMessageRecieved.ToString(), state: null, dueTime: TimeSpan.FromMinutes(1), TimeSpan.FromMilliseconds(-1));
+            await RegisterReminderAsync(ReminderTypes.LastMessageRecieved.ToString(), state: null, dueTime: TimeSpan.FromMinutes(5), TimeSpan.FromMilliseconds(-1));
         }
 
         public async Task SetReportedPropertyAsync(Dictionary<string,string> reportedProperties)
