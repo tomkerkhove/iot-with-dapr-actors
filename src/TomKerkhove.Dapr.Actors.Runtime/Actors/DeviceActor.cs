@@ -122,7 +122,10 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             try
             {
                 _deviceClient = await CreateIoTHubDeviceClient();
-                
+
+                // Ensure we are aware of connection changes
+                _deviceClient.SetConnectionStatusChangesHandler(DeviceStatusChanged);
+
                 Logger.LogInformation("Device {DeviceId} activated", DeviceId);
 
                 LogMetric("Actor Activated", 1);
@@ -152,7 +155,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             {
                 LogMetric("Actor Deactivated", 1);
 
-                _deviceClient.Dispose();
+                _deviceClient?.Dispose();
             }
             finally
             {
@@ -188,6 +191,16 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             Logger.LogEvent("Device Inactive", contextualInformation);
             LogMetric("Device Inactive", 1, contextualInformation);
             // TODO: Emit event grid event
+        }
+
+        private void DeviceStatusChanged(ConnectionStatus status, ConnectionStatusChangeReason reason)
+        {
+            Logger.LogWarning("Device connection changed to {DeviceConnectionStatus}. Reason {Reason}", status, reason);
+
+            var telemetryContext = ComposeRequiredContextualInformation();
+            telemetryContext.TryAdd("Status", status);
+            telemetryContext.TryAdd("Reason", reason);
+            Logger.LogEvent("Device Connectivity Changed", telemetryContext);
         }
 
         private void LogMetric(string metricName, double metricValue , Dictionary<string, object> contextualInformation = null)
