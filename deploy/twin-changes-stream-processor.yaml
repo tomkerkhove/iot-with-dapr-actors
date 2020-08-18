@@ -68,6 +68,6 @@ spec:
   triggers:
   - type: azure-eventhub
     metadata:
-      connection: EventHubs.ConnectionStrings.DeviceMessages
+      connection: EventHubs.ConnectionStrings.TwinChanges
       storageConnection: AzureWebJobsStorage
       blobContainer: azure-webjobs-eventhub
