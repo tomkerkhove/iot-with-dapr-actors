@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TomKerkhove.Dapr.APIs.Management.Exceptions;
 
@@ -12,7 +13,7 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
             {"DEF", "2"},
             {"GHI", "3"},
             {"JKL", "4"},
-            {"MNO", "1"}
+            {"MNO", "5"}
         };
 
         public Task<string> GetDeviceIdAsync(string imei)
@@ -23,6 +24,17 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
             }
 
             return Task.FromResult(_inMemoryDeviceRegistry[imei]);
+        }
+
+        public Task RegisterAsync(string deviceId, string imei)
+        {
+            _inMemoryDeviceRegistry[imei] = deviceId;
+            return Task.CompletedTask;
+        }
+
+        public Task<List<string>> GetAllAsync()
+        {
+            return Task.FromResult(_inMemoryDeviceRegistry.Values.ToList());
         }
     }
 }

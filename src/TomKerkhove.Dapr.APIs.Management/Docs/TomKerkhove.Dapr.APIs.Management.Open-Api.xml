@@ -4,6 +4,14 @@
         <name>TomKerkhove.Dapr.APIs.Management</name>
     </assembly>
     <members>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.GetAll">
+            <summary>
+                Get Devices
+            </summary>
+            <remarks>Provides capability to get latest tags for a given device.</remarks>
+            <response code="200">List of all devices is provided</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
         <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.GetTags(System.String)">
             <summary>
                 Get Device Tags
@@ -29,7 +37,17 @@
             <remarks>Provides capability to update information for a given device.</remarks>
             <param name="deviceId">Unique id for a given device</param>
             <param name="newData">New information about the device</param>
-            <response code="200">Device information is provided</response>
+            <response code="200">Device information is persisted</response>
+            <response code="503">We are undergoing some issues</response>
+        </member>
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.Provision(System.String,TomKerkhove.Dapr.Core.Contracts.ProvisionedDeviceInfo)">
+            <summary>
+                Provision Device
+            </summary>
+            <remarks>Provides capability to provision a new device.</remarks>
+            <param name="deviceId">Unique id for a given device</param>
+            <param name="provisionedDeviceInfo">Information about the new device</param>
+            <response code="200">Device information is persisted</response>
             <response code="503">We are undergoing some issues</response>
         </member>
         <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DiscoveryController.GetDevice(System.String)">

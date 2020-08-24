@@ -41,6 +41,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
         public async Task ProvisionAsync(DeviceInfo info, TwinInformation initialTwinInfo)
         {
             await SetInfoAsync(info);
+
             // TODO: Emit event
 
             TrackDeviceProvisionedEvent(info);

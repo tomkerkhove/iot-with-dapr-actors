@@ -21,14 +21,20 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
             _logger = logger;
         }
 
-        public async Task<DeviceInfo> GetDataAsync(string deviceId)
+        public async Task<DeviceInfo> GetDeviceInfoAsync(string deviceId)
         {
             return await Interact(deviceId, deviceActor => deviceActor.GetInfoAsync());
         }
 
-        public async Task SetDataAsync(string deviceId, DeviceInfo newData)
+        public async Task SetDeviceInfoAsync(string deviceId, DeviceInfo newData)
         {
             await Interact(deviceId, deviceActor => deviceActor.SetInfoAsync(newData));
+        }
+
+        public async Task ProvisionAsync(string deviceId, ProvisionedDeviceInfo provisionedDeviceInfo)
+        {
+            // TODO: Keep track of new device in our list
+            await Interact(deviceId, deviceActor => deviceActor.ProvisionAsync(provisionedDeviceInfo.DeviceInfo, provisionedDeviceInfo.InitialTwin));
         }
 
         public async Task ReceiveMessageAsync(string deviceId, MessageTypes messageType, Message message)

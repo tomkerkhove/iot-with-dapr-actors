@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddDependencies(this IServiceCollection services)
         {
             services.AddTransient<DeviceRepository>();
-            services.AddTransient<DeviceRegistryRepository>();
+            services.AddSingleton<DeviceRegistryRepository>();
 
             return services;
         }
