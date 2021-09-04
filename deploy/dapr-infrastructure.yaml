@@ -5,7 +5,7 @@ metadata:
   labels:
     app: dapr-infrastructure
 data:
-  stateStoreConnectionstring: QWNjb3VudEVuZHBvaW50PWh0dHBzOi8vZGFwci1zdGF0ZS1zdG9yZS1zYW5kYm94LmRvY3VtZW50cy5henVyZS5jb206NDQzLztBY2NvdW50S2V5PUJIdmoybVhwNGFKVG5VOXo0Qnk0V1ZXMmRIcHlDaXJyWEI5aEYxcEdqWktDcVdYUExPb3owWmlqWTdVRGRNRVZ6TzhvZUNYQU4ydWYxR2NkWDhjVXlRPT07Cg==
+  stateStoreConnectionstring: <base-64-key>
 ---
 apiVersion: dapr.io/v1alpha1
 kind: Component
