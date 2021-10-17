@@ -1,15 +1,15 @@
 using System;
-using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using TomKerkhove.Dapr.Actors.Runtime.Actors;
 
 namespace TomKerkhove.Dapr.Actors.Runtime
 {
     public class Program
     {
+        private const string DaprEndpointUrl = "http://+:3000";
+
         public static int Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -66,11 +66,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.ConfigureKestrel(kestrelServerOptions => kestrelServerOptions.AddServerHeader = false)
-                            .UseUrls("http://localhost:3000")
-                            .UseActors(actorRuntime =>
-                            {
-                                actorRuntime.RegisterActor<DeviceActor>();
-                            })
+                            .UseUrls(DaprEndpointUrl)
                             .UseSerilog()
                             .UseStartup<Startup>();
                     });
