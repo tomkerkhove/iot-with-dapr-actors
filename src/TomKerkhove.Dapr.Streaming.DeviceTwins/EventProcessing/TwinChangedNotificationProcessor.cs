@@ -22,8 +22,15 @@ namespace TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing
         public async Task ProcessAsync(NotificationMetadata notificationMetadata, string rawEvent)
         {
             var twinChangedNotification = JsonConvert.DeserializeObject<TwinChangedNotification>(rawEvent);
-            
+
+            // Don't do anything if it's just reported twin updates
+            if (twinChangedNotification.Properties.Desired == null && twinChangedNotification.Tags == null)
+            {
+                return;
+            }
+
             var twinInformation = TwinInformation.Parse(twinChangedNotification);
+            
             await _deviceRegistryClient.NotifyTwinChangedAsync(notificationMetadata.DeviceId, twinInformation);
         }
     }
