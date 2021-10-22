@@ -15,7 +15,7 @@ jobs:
       with:
         registry: ghcr.io
         username: tomkerkhove
-        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build & Tag Docker image
       run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Actors.Runtime/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-actor-runtime
     - name: Push Docker image to GitHub Container Registry
@@ -31,7 +31,7 @@ jobs:
       with:
         registry: ghcr.io
         username: tomkerkhove
-        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build & Tag Docker image
       run: docker build ./src/ --file ./src/TomKerkhove.Dapr.APIs.Management/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-device-api
     - name: Push Docker image to GitHub Container Registry
@@ -47,7 +47,7 @@ jobs:
       with:
         registry: ghcr.io
         username: tomkerkhove
-        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build & Tag Docker image
       run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Streaming.DeviceTelemetry/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-telemetry
     - name: Push Docker image to GitHub Container Registry
@@ -63,7 +63,7 @@ jobs:
       with:
         registry: ghcr.io
         username: tomkerkhove
-        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build & Tag Docker image
       run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Streaming.DeviceTwins/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-twins
     - name: Push Docker image to GitHub Container Registry
