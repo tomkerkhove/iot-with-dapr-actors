@@ -54,7 +54,7 @@ spec:
               name: iot-with-dapr-device-telemetry-secrets
               key: eventHubsConnectionstring
 ---
-apiVersion: keda.k8s.io/v1alpha1
+apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: device-telemetry-autoscale
@@ -64,7 +64,7 @@ metadata:
     area: autoscaling
 spec:
   scaleTargetRef:
-    deploymentName: device-telemetry-stream-processor
+    name: device-telemetry-stream-processor
   triggers:
   - type: azure-eventhub
     metadata:
