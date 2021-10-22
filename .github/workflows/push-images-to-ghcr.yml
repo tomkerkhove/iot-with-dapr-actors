@@ -1,0 +1,70 @@
+name: Push Docker Images to GitHub Container Registry
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  actor_runtime:
+    name: Actor Runtime (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      uses: docker/login-action@v1.6.0
+      with:
+        registry: ghcr.io
+        username: tomkerkhove
+        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+    - name: Build & Tag Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Actors.Runtime/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-actor-runtime
+    - name: Push Docker image to GitHub Container Registry
+      run: docker push ghcr.io/tomkerkhove/iot-with-dapr-actor-runtime
+
+  device_api:
+    name: Device API (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      uses: docker/login-action@v1.6.0
+      with:
+        registry: ghcr.io
+        username: tomkerkhove
+        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+    - name: Build & Tag Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.APIs.Management/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-device-api
+    - name: Push Docker image to GitHub Container Registry
+      run: docker push ghcr.io/tomkerkhove/iot-with-dapr-device-api
+
+  device_telemetry:
+    name: Device Telemetry (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      uses: docker/login-action@v1.6.0
+      with:
+        registry: ghcr.io
+        username: tomkerkhove
+        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+    - name: Build & Tag Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Streaming.DeviceTelemetry/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-telemetry
+    - name: Push Docker image to GitHub Container Registry
+      run: docker push ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-telemetry
+
+  device_twin_changes:
+    name: Device Twin Changes (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      uses: docker/login-action@v1.6.0
+      with:
+        registry: ghcr.io
+        username: tomkerkhove
+        password: ${{ secrets.CONTAINER_REGISTRY_KEY }}
+    - name: Build & Tag Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Streaming.DeviceTwins/Dockerfile --tag ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-twins
+    - name: Push Docker image to GitHub Container Registry
+      run: docker push ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-twins
