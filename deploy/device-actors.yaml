@@ -1,34 +1,34 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: dapr-sandbox-actors-secrets
+  name: iot-with-dapr-actors-secrets
   labels:
-    app: dapr-sandbox
+    app: iot-with-dapr
     component: actors
     area: app-runtime
 data:
-  applicationInsightsKey: NjQyZGM1MTYtZWY5Zi00NzVmLTkzMzAtMWMxN2E3MTM2NTFi
+  applicationInsightsKey: <base-64-encoded-application-insights-key>
   # This is a hack because it should come from Azure Key Vault, just like all secrets actually
-  demoDeviceConnectionString: SG9zdE5hbWU9ZGFwci1hY3RvcnMuYXp1cmUtZGV2aWNlcy5uZXQ7RGV2aWNlSWQ9ZGVtby1kZXZpY2U7U2hhcmVkQWNjZXNzS2V5PXNWalBoWStBYkRpczNzZHZNdVBJT1BxQkVhVlM3WmFEOFBGMVR2RmhObEE9
+  demoDeviceConnectionString: <base-64-encoded-demo-device-auth-key>
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dapr-sandbox-actors
+  name: iot-with-dapr-actors
   labels:
-    app: dapr-sandbox
+    app: iot-with-dapr
     component: actors
     area: app-runtime
 spec:
   selector:
     matchLabels:
-      app: dapr-sandbox
+      app: iot-with-dapr
       component: actors
       area: app-runtime
   template:
     metadata:
       labels:
-        app: dapr-sandbox
+        app: iot-with-dapr
         component: actors
         area: app-runtime
       annotations:
@@ -38,15 +38,18 @@ spec:
     spec:
       containers:
       - name: actor-runtime
-        image: tomkerkhove/dapr-sandbox-iot-actors:dev
+        image: tomkerkhove/iot-with-dapr-actor-runtime
         env:
         - name: APPLICATION_INSIGHTS
           valueFrom:
             secretKeyRef:
-              name: dapr-sandbox-actors-secrets
+              name: iot-with-dapr-actors-secrets
               key: applicationInsightsKey
+        # This is a local override to configure an authentication key for a given device
+        # In reality, this should come from Azure Key Vault, but we are using this approach for demo sake
+        # This means that, currently, we can only authenticate for device 'demo-device'
         - name: IOTHUB_CONNECTIONSTRING_DEVICE_demo-device
           valueFrom:
             secretKeyRef:
-              name: dapr-sandbox-actors-secrets
+              name: iot-with-dapr-actors-secrets
               key: demoDeviceConnectionString

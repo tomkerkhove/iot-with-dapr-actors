@@ -33,8 +33,12 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
 
         public async Task ProvisionAsync(string deviceId, ProvisionedDeviceInfo provisionedDeviceInfo)
         {
-            // TODO: Keep track of new device in our list
             await Interact(deviceId, deviceActor => deviceActor.ProvisionAsync(provisionedDeviceInfo.DeviceInfo, provisionedDeviceInfo.InitialTwin));
+        }
+
+        public async Task ChangeIpAddressAsync(string deviceId, string newIpAddress)
+        {
+            await Interact(deviceId, deviceActor => deviceActor.IpAddressHasChangedAsync(newIpAddress));
         }
 
         public async Task ReceiveMessageAsync(string deviceId, MessageTypes messageType, Message message)

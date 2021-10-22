@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Arcus.Security.Core;
 using Dapr.Actors;
 using Dapr.Actors.Runtime;
+using GuardNet;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ using TransportType = Microsoft.Azure.Devices.Client.TransportType;
 
 namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 {
-    internal class DeviceActor : ExtendedActor<DeviceActor>, IDeviceActor, IRemindable
+    internal class DeviceActor : Actor, IDeviceActor, IRemindable
     {
         private const string DeviceInfoKey = "device_info";
         private const string DesiredPropertiesStateKey = "twin_state_desired";
@@ -26,23 +27,28 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
         public string DeviceId => Id.GetId();
 
+        private readonly MessageProcessor _messageProcessor;
+        private readonly ISecretProvider _secretProvider;
         private DeviceClient _deviceClient;
 
         /// <summary>
         ///     Initializes a new instance of DeviceActor
         /// </summary>
-        /// <param name="actorService">The actor service that will host this actor instance.</param>
-        /// <param name="actorId">The id for this actor instance.</param>
-        public DeviceActor(ActorService actorService, ActorId actorId)
-            : base(actorService, actorId)
+        public DeviceActor(ActorHost actorHost, MessageProcessor messageProcessor, ISecretProvider secretProvider)
+            : base(actorHost)
         {
+            Guard.NotNull(messageProcessor, nameof(messageProcessor));
+            Guard.NotNull(secretProvider, nameof(secretProvider));
+
+            _secretProvider = secretProvider;
+            _messageProcessor = messageProcessor;
         }
 
         public async Task ProvisionAsync(DeviceInfo info, TwinInformation initialTwinInfo)
         {
             await SetInfoAsync(info);
 
-            // TODO: Emit event
+            Logger.LogEvent("Device Provisioned");
 
             TrackDeviceProvisionedEvent(info);
         }
@@ -56,6 +62,21 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
             Logger.LogEvent("Device Provisioned", contextualInformation);
             LogMetric("Device Provisioned", 1, contextualInformation);
+        }
+
+        public async Task IpAddressHasChangedAsync(string newIpAddress)
+        {
+            var deviceInfo = await GetInfoAsync();
+            var oldIpAddress = deviceInfo.IP;
+            deviceInfo.IP = newIpAddress;
+            await StateManager.SetStateAsync(DeviceInfoKey, deviceInfo);
+
+            var contextualInformation = new Dictionary<string, object>
+            {
+                { "New IP Address", newIpAddress },
+                { "Old IP Address", oldIpAddress },
+            };
+            Logger.LogEvent("Device IP Address Changed", contextualInformation);
         }
 
         public async Task SetInfoAsync(DeviceInfo data)
@@ -78,9 +99,8 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             LogMetric("Device Message Received", 1, context);
 
             await SetReminderToDetectDeviceGoingOfflineAsync();
-
-            var messageProcessor = Services.GetService<MessageProcessor>();
-            await messageProcessor.ProcessAsync(type, message.Content);
+            
+            await _messageProcessor.ProcessAsync(type, message.Content);
         }
 
         public async Task NotifyTwinInformationChangedAsync(TwinInformation notification)
@@ -143,8 +163,7 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
 
         private async Task<DeviceClient> CreateIoTHubDeviceClient()
         {
-            var secretProvider = Services.GetRequiredService<ISecretProvider>();
-            var connectionString = await secretProvider.GetRawSecretAsync($"IOTHUB_CONNECTIONSTRING_DEVICE_{DeviceId}");
+            var connectionString = await _secretProvider.GetRawSecretAsync($"IOTHUB_CONNECTIONSTRING_DEVICE_{DeviceId}");
 
             return DeviceClient.CreateFromConnectionString(connectionString, TransportType.Amqp);
         }

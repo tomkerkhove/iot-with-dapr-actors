@@ -7,14 +7,7 @@ namespace TomKerkhove.Dapr.APIs.Management.Repositories
 {
     public class DeviceRegistryRepository
     {
-        private readonly Dictionary<string, string> _inMemoryDeviceRegistry = new Dictionary<string, string>
-        {
-            {"ABC", "1"},
-            {"DEF", "2"},
-            {"GHI", "3"},
-            {"JKL", "4"},
-            {"MNO", "5"}
-        };
+        private readonly Dictionary<string, string> _inMemoryDeviceRegistry = new Dictionary<string, string>();
 
         public Task<string> GetDeviceIdAsync(string imei)
         {

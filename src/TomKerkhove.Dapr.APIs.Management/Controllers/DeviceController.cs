@@ -98,6 +98,25 @@ namespace TomKerkhove.Dapr.APIs.Management.Controllers
         }
 
         /// <summary>
+        ///     Change IP Address
+        /// </summary>
+        /// <remarks>Provides capability to change the IP address for a given device.</remarks>
+        /// <param name="deviceId">Unique id for a given device</param>
+        /// <param name="newIpAddressInfo">New IP address</param>
+        /// <response code="200">Device information is persisted</response>
+        /// <response code="503">We are undergoing some issues</response>
+        [HttpPut("{deviceId}/ip", Name = "Device_ChangeIpAddress")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        [SwaggerResponseHeader(new[] { (int)HttpStatusCode.OK, (int)HttpStatusCode.InternalServerError }, "RequestId", "string", "The header that has a request ID that uniquely identifies this operation call")]
+        [SwaggerResponseHeader(new[] { (int)HttpStatusCode.OK, (int)HttpStatusCode.InternalServerError }, "X-Transaction-Id", "string", "The header that has the transaction ID is used to correlate multiple operation calls.")]
+        public async Task<IActionResult> ChangeIpAddress([FromRoute] string deviceId, [FromBody] NewIpAddress newIpAddressInfo)
+        {
+            await _deviceRepository.ChangeIpAddressAsync(deviceId, newIpAddressInfo.IpAddress);
+            return Ok();
+        }
+
+        /// <summary>
         ///     Provision Device
         /// </summary>
         /// <remarks>Provides capability to provision a new device.</remarks>

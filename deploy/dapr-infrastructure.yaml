@@ -17,7 +17,7 @@ spec:
   type: state.azure.cosmosdb
   metadata:
   - name: url
-    value: https://dapr-state-store-sandbox.documents.azure.com:443
+    value: https://<cosmos-db-name>.documents.azure.com:443
   - name: masterKey
     valueFrom:
       secretKeyRef:

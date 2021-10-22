@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
+using TomKerkhove.Dapr.Actors.Runtime.Actors;
 using TomKerkhove.Dapr.Actors.Runtime.Device.MessageProcessing;
 
 namespace TomKerkhove.Dapr.Actors.Runtime
@@ -25,6 +26,12 @@ namespace TomKerkhove.Dapr.Actors.Runtime
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRouting();
+            services.AddControllers();
+            services.AddActors(actorRuntimeOptions =>
+            {
+                // Register the actors in our platform
+                actorRuntimeOptions.Actors.RegisterActor<DeviceActor>();
+            });
 
             services.AddTransient<MessageProcessor>();
 
@@ -44,6 +51,15 @@ namespace TomKerkhove.Dapr.Actors.Runtime
             {
                 app.UseHsts();
             }
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+
+                // Register actors handlers that interface with the Dapr runtime.
+                endpoints.MapActorsHandlers();
+            });
 
             Log.Logger = CreateLoggerConfiguration(app.ApplicationServices).CreateLogger();
         }
