@@ -9,6 +9,7 @@ namespace TomKerkhove.Dapr.Core.Actors.Device.Interface
     {
         Task ProvisionAsync(DeviceInfo info, TwinInformation initialTwinInfo);
         Task SetInfoAsync(DeviceInfo info);
+        Task IpAddressHasChangedAsync(string newIpAddress);
         Task<DeviceInfo> GetInfoAsync();
         Task<Dictionary<string, string>> GetTagsAsync();
         Task ReceiveMessageAsync(MessageTypes type, Message message);

@@ -64,6 +64,21 @@ namespace TomKerkhove.Dapr.Actors.Runtime.Actors
             LogMetric("Device Provisioned", 1, contextualInformation);
         }
 
+        public async Task IpAddressHasChangedAsync(string newIpAddress)
+        {
+            var deviceInfo = await GetInfoAsync();
+            var oldIpAddress = deviceInfo.IP;
+            deviceInfo.IP = newIpAddress;
+            await StateManager.SetStateAsync(DeviceInfoKey, deviceInfo);
+
+            var contextualInformation = new Dictionary<string, object>
+            {
+                { "New IP Address", newIpAddress },
+                { "Old IP Address", oldIpAddress },
+            };
+            Logger.LogEvent("Device IP Address Changed", contextualInformation);
+        }
+
         public async Task SetInfoAsync(DeviceInfo data)
         {
             await StateManager.SetStateAsync(DeviceInfoKey, data);
