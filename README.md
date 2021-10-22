@@ -1,6 +1,6 @@
-# Dapr - Actors Sandbox
+# Building IoT solutions with Dapr Actors
 
-Sandbox to play with Dapr Actors.
+Example of how you can build IoT solutions that have custom device gateways that are using Dapr Actors to represent devices in the field.
 
 <div style="text-align: center"><img src="https://github.com/dapr/dapr/raw/master/img/dapr_logo.svg" height="120px" ></div>
 
