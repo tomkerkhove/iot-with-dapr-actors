@@ -1,0 +1,40 @@
+name: CI
+on:
+  - pull_request
+
+jobs:
+  solution:
+    name: Solution
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Solution
+      run: dotnet build ./src/TomKerkhove.Dapr.sln
+  actor_runtime:
+    name: Actor Runtime (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Actors.Runtime/Dockerfile
+  device_api:
+    name: Device API (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.APIs.Management/Dockerfile
+  device_telemetry:
+    name: Device Telemetry (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Streaming.DeviceTelemetry/Dockerfile
+  device_twin_changes:
+    name: Device Twin Changes (Docker)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image
+      run: docker build ./src/ --file ./src/TomKerkhove.Dapr.Streaming.DeviceTwins/Dockerfile
