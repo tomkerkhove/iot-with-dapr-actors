@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: twin-changes
-        image: tomkerkhove/iot-with-dapr-streaming-device-twins:dev
+        image: ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-twins:dev
         ports:
         # Port for HTTP triggered functions
         - containerPort: 80

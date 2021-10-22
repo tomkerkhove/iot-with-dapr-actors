@@ -31,11 +31,11 @@ spec:
         area: app-runtime
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/id: "device-api"
+        dapr.io/app-id: "device-api"
     spec:
       containers:
       - name: device-api
-        image: tomkerkhove/iot-with-dapr-device-api
+        image: ghcr.io/tomkerkhove/iot-with-dapr-device-api
         ports:
         - containerPort: 80
         env:

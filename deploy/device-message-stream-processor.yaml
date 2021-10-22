@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: device-telemetry
-        image: tomkerkhove/iot-with-dapr-streaming-device-telemetry
+        image: ghcr.io/tomkerkhove/iot-with-dapr-streaming-device-telemetry
         ports:
         # Port for HTTP triggered functions
         - containerPort: 80

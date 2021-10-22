@@ -31,14 +31,14 @@ spec:
         app: iot-with-dapr
         component: actors
         area: app-runtime
-      annotations:
+      annotations:      
         dapr.io/enabled: "true"
-        dapr.io/id: "actors-runtime"
-        dapr.io/port: "3000"
+        dapr.io/app-id: "actors-runtime"
+        dapr.io/app-port: "3000"
     spec:
       containers:
       - name: actor-runtime
-        image: tomkerkhove/iot-with-dapr-actor-runtime
+        image: ghcr.io/tomkerkhove/iot-with-dapr-actor-runtime
         env:
         - name: APPLICATION_INSIGHTS
           valueFrom:
