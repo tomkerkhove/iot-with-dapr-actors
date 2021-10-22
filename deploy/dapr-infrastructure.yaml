@@ -15,14 +15,14 @@ metadata:
     app: dapr-infrastructure
 spec:
   type: state.azure.cosmosdb
+  version: v1
   metadata:
   - name: url
     value: https://<cosmos-db-name>.documents.azure.com:443
   - name: masterKey
-    valueFrom:
-      secretKeyRef:
-        name: dapr-infrastructure-secrets
-        key: stateStoreConnectionstring
+    secretKeyRef:
+      name: dapr-infrastructure-secrets
+      key: stateStoreConnectionstring
   - name: database
     value: "platform"
   - name: collection
