@@ -1,6 +1,6 @@
-# Dapr - Actors Sandbox
+# Building IoT solutions with Dapr Actors
 
-Sandbox to play with Dapr Actors.
+Example of how you can build IoT solutions that have custom device gateways that are using Dapr Actors to represent devices in the field.
 
 <div style="text-align: center"><img src="https://github.com/dapr/dapr/raw/master/img/dapr_logo.svg" height="120px" ></div>
 
@@ -16,8 +16,8 @@ Sandbox to play with Dapr Actors.
 
 Before you can start, you'll need to :
 
-1. Install Dapr ([docs](https://github.com/dapr/docs/blob/master/getting-started/environment-setup.md#using-helm-advanced))
-2. Install KEDA ([docs](https://keda.sh/docs/1.5/deploy/#helm))
+1. Install Dapr ([docs](https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-deploy/#install-with-helm-advanced))
+2. Install KEDA ([docs](https://keda.sh/docs/latest/deploy/#helm))
 3. Update YAML specs under `/deploy` with your config
 
 #### Deploying the scenario
