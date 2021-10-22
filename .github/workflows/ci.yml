@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
+    - name: Build Solution
       run: dotnet build ./src/TomKerkhove.Dapr.sln
   actor_runtime:
     name: Actor Runtime (Docker)
