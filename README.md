@@ -6,7 +6,7 @@ Example of how you can build IoT solutions that have custom device gateways that
 
 ## How does it work?
 
-![POC](./media/POC.png)
+![Overview](./media/overview.png)
 
 ## Try it yourself!
 
