@@ -26,12 +26,15 @@ namespace TomKerkhove.Dapr.Streaming.DeviceTwins.EventProcessing
             // Don't do anything if it's just reported twin updates
             if (twinChangedNotification.Properties.Desired == null && twinChangedNotification.Tags == null)
             {
+                _logger.LogInformation("Device twin change ignored as it only contained reported properties");
                 return;
             }
 
             var twinInformation = TwinInformation.Parse(twinChangedNotification);
             
             await _deviceRegistryClient.NotifyTwinChangedAsync(notificationMetadata.DeviceId, twinInformation);
+
+            _logger.LogInformation("Device twin change processed");
         }
     }
 }
