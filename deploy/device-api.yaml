@@ -67,6 +67,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: iot-with-dapr-apis-device-load-balancer
+  annotations:
+    # Provide a DNS name which will be exposed under <name>.<location>.cloudapp.azure.com
+    # Learn more on https://docs.microsoft.com/en-us/azure/aks/static-ip#apply-a-dns-label-to-the-service
+    service.beta.kubernetes.io/azure-dns-label-name: iot-with-dapr-actors
   labels:
     app: iot-with-dapr
     component: device-api
