@@ -40,13 +40,13 @@
             <response code="200">Device information is persisted</response>
             <response code="503">We are undergoing some issues</response>
         </member>
-        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.ChangeIpAddress(System.String,System.String)">
+        <member name="M:TomKerkhove.Dapr.APIs.Management.Controllers.DeviceController.ChangeIpAddress(System.String,TomKerkhove.Dapr.Core.Contracts.NewIpAddress)">
             <summary>
                 Change IP Address
             </summary>
             <remarks>Provides capability to change the IP address for a given device.</remarks>
             <param name="deviceId">Unique id for a given device</param>
-            <param name="ipAddress">New IP address</param>
+            <param name="newIpAddressInfo">New IP address</param>
             <response code="200">Device information is persisted</response>
             <response code="503">We are undergoing some issues</response>
         </member>
