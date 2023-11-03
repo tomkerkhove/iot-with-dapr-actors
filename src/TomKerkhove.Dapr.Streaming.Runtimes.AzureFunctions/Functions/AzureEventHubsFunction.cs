@@ -61,7 +61,6 @@ namespace TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions.Functions
                 }
 
                 string rawEventPayload = Encoding.UTF8.GetString(eventData.Body.Span);
-                //string rawEventPayload = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
 
                 await ProcessIndividualEventAsync(eventData, rawEventPayload);
             }
