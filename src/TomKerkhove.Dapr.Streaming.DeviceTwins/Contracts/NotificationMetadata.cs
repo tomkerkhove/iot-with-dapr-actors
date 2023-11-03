@@ -1,7 +1,6 @@
 ﻿using System;
+using Azure.Messaging.EventHubs;
 using GuardNet;
-using Microsoft.Azure.EventHubs;
-
 namespace TomKerkhove.Dapr.Streaming.DeviceTwins.Contracts
 {
     public class NotificationMetadata

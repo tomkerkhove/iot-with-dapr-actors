@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure.EventHubs;
+using Azure.Messaging.EventHubs;
+
 
 namespace TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions.Functions
 {
@@ -54,12 +55,12 @@ namespace TomKerkhove.Dapr.Streaming.Runtimes.AzureFunctions.Functions
         {
             try
             {
-                if (eventData.Body == null || eventData.Body.Array == null)
+                if (eventData.Body.IsEmpty || eventData.Body.ToArray().Length == 0)
                 {
                     throw new Exception("Message does not contain a payload");
                 }
 
-                string rawEventPayload = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
+                string rawEventPayload = Encoding.UTF8.GetString(eventData.Body.Span);
 
                 await ProcessIndividualEventAsync(eventData, rawEventPayload);
             }

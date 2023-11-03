@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Azure.Messaging.EventHubs;
 using GuardNet;
-using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using TomKerkhove.Dapr.Core.Clients;
@@ -43,5 +43,7 @@ namespace TomKerkhove.Dapr.Streaming.DeviceTelemetry.Functions
                 throw new Exception($"Unable to process message with type {rawMessageType}");
             }
         }
+
+
     }
 }
